@@ -50,7 +50,8 @@ header{
 .menu-user-button{
     position: fixed;
     left: 5px;
-    background-color: aliceblue;
+    z-index: 1;
+    background-color: var(--white);
     color: var(--black);
     width: 50px;
     height: 50px;
@@ -59,6 +60,7 @@ header{
     text-align: center;
     text-justify: center;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .header-logo-a{
@@ -70,6 +72,75 @@ header img {
     max-width: 320px;
     height: 70%;
 }
+
+.aside-user-menu{
+    position: fixed;
+    top: 80px;
+    left: 0;
+    z-index: 0;
+    width: 300px;
+    height: 40vh;
+    min-height: 400px;
+    padding: 0 15px;
+    border-radius: 0 5px 5px 0;
+    display: flex;
+    flex-direction: column;  
+    row-gap: 15px; 
+    align-items: center;   
+    justify-content: space-between; 
+    overflow: hidden;    
+    box-shadow: 0 0 15px 2px var(--black);
+    background-color: var(--white);
+    
+}
+
+.user-menu_user{
+    width: 100%;
+    padding-block-start: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.img-user{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #25D366;
+}
+
+.user-name{
+    color: var(--black);
+    font-size: 3rem;
+}
+
+.button-login, .button-logout{
+    align-self: center;
+}
+
+.user-menu-button-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-aside-user{
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: 100px;
+    border-radius: 20px;
+    border: 2px solid var(--white);    
+    padding: 5px;
+    color: var(--white);
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    box-shadow: var(--boxSadow);
+    cursor:pointer;
+}
+
 
 
 
@@ -85,7 +156,24 @@ header img {
     color: var(--white);
     padding: 5px;
     box-shadow: var(--boxSadow);
+    cursor: pointer;
     
+}
+
+.WhatsApp-button{
+    background: linear-gradient(70deg,#201E1C 10%, #25D366 100%);
+    border: 2px solid var(--white);    
+    text-align: center;
+    color: var(--white);
+    width: 150px;
+    height: max-content;
+    border-radius: 40px;
+    margin-block-end: 20px;
+    font-size: 2rem;
+    font-weight: 700;
+    padding: 5px;
+    box-shadow: var(--boxSadow);
+      
 }
 
 .main-inicio{
@@ -116,7 +204,8 @@ header img {
     font-weight: 700;
     text-align: center;
     box-shadow: var(--boxSadow);
-
+    cursor: pointer;
+    
 
 }
 .btn-ordenes-pendientes{
@@ -366,10 +455,66 @@ header img {
     background: linear-gradient(140deg,#201E1C 10%, #1af76f 100%);
 }
 
+.section-delivery{
+    background: var(--white);
+    display: grid;
+    grid-template-rows: auto 6fr 90px;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    justify-items: center;
+}
+
+.section-info-delivery-container{
+    grid-area: 2 / 1 / 3 / 4;
+    box-shadow: 0 0 0 1px var(--white);
+    /* border: 1px solid var(--white); */
+    background-color: var(--white);
+    scroll-snap-align: center;
+    width: 100vw;
+    max-width: 450px;   
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    overscroll-behavior-y: contain;
+    scroll-snap-type: y proximity;
+
+}
+
+.delivery-info-container{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    padding: 5px;
+    background-color: var(--white);
+
+}
+
+.delivery-info-text{
+    font-size: 2rem;
+
+}
 
 
+.delivery-price-container{
+    display: grid;
+    place-items: center;
+}
+
+.delivery-price{
+    font-size: 3rem;
+    align-items: center;
+    justify-content: center;
+}
 
 
+.mapa-provisorio{
+    width: 95%;
+    box-shadow: 0 0 5px 1px var(--black);
+    object-fit: cover;
+}
 
 .card-prueba{
     scroll-snap-align: center;
@@ -377,7 +522,6 @@ header img {
     width: 100%;
     height: 100px;
     background: linear-gradient(140deg,#201E1C 10%, #f71a9b 100%);
-
 }
 
 .inactive{

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./styles/mobile.css">
     <title>Document</title>
+    
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,12 +17,29 @@
     <header>
         <!-- &#128100; ES LA SILUETA DE USUARIO -->
         <!-- &#8801; ES menu hamburguesa -->
-        <span class="menu-user-button">&#8801;</span> 
+        <span class="menu-user-button" id="menuUserButton">&#8801;</span> 
+
+        <aside class="aside-user-menu " id="userMenu"> 
+            <section class="user-menu_user">
+                <img class="img-user inactive" id="imgUser" src="" alt="foto de perfil">
+                <span class="user-name" id="userName">Debe iniciar sesion</span> 
+                <button class="button-login primary-button" id="btnLogIn">Log In</button> 
+                <button class="button-logout primary-button inactive" id="btnLogOut">Log out</button>             
+            </section>
+            <section class="user-menu-button-container inactive" id="UserMenuBtnContainer">
+                <button class="btn-aside-user btn-ordenes-pendientes">ORDENES PENDIENTES</button>
+                <button class="btn-aside-user btn-ordenes-para-reparto">ORDENES PARA REPARTO</button>
+                <button class="btn-aside-user btn-ordenes-para-entregadas">ORDENES ENTREGADAS</button>
+
+
+            </section>   
+            <a href="https://wa.me/59894638229" class="WhatsApp-button user-menu-WhatsApp-button" >Contactar por WhatsApp</a>
+        </aside>
         <a href="index.html" class="header-logo-a"><img src="./assets/img/logos/setentaTrece320px.jpg" alt="Logo Setenta Trece"></a>           
 
     </header>
     <main class="main-inicio">
-        <section class="inicio-button-container inactive ">
+        <section class="inicio-button-container inactive" id="inicioBtnContainer">
             <button class="btn-inicio btn-ordenes-pendientes">ORDENES PENDIENTES</button>
             <button class="btn-inicio btn-ordenes-para-reparto">ORDENES PARA REPARTO</button>
             <button class="btn-inicio btn-ordenes-para-entregadas">ORDENES ENTREGADAS</button>
@@ -407,7 +425,7 @@
 
         </aside>
 
-        <section class="section-options ">
+        <section class="section-options  inactive">
             <section class=" options-info-container">
                                                     <article class="card-order-small">
                                                         <div class="order-small-data">
@@ -479,9 +497,7 @@
                                 </div>                   
                                 
                 </div> 
-            </div>
-
-            
+            </div>         
                                   
             <button class="primary-button options-btn-volver">volver</button> 
             <button class="primary-button options-btn-pronto">Pronto para reparto</button>   
@@ -489,7 +505,62 @@
 
         </section>
 
+        <section class="section-delivery inactive ">
+            <section class=" options-info-container">
+                                                    <article class="card-order-small">
+                                                        <div class="order-small-data">
+                                                            <div class="card-order-small-cliente">Cliente: </div>
+                                                            <div class="card-order-small-id">094144657</div>
+                                                            <div class="order-small-list-container">
+                                                                <ul>
+                                                                    <li>Tortugon: 1</li>
+                                                                    <li>pizza: 1 metro</li>
+                                                                    <li>Tortugon: 1</li>
+                                                                    <li>pizza: 1 metro</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="order-small-time-container">
+                                                            <span class="order-small-delayed-time">10</span>
+                                                            <span>min</span>
+                                                        </div>
+                                                    </article>
+            </section>
+            
+                                            
+                                <div class="section-info-delivery-container">
+                                    <div class="delivery-info-container">
+                                       <img class="mapa-provisorio" src="./assets/img/mapa_provisorio.jpg" alt="">
+                                       <section class="delivery-info-text">
+                                        <span>Descripcion:</span>
+                                        <p class="delivery-info-description">
+                                           Casa verde con porton de madera, auto blanco afuera
+                                        </p>
+
+                                       </section>                                 
+                                    </div>                
+                                </div>                   
+                                                                  
+                  
+                                  
+            <button class="primary-button options-btn-volver">volver</button> 
+            <div class="delivery-price-container">
+                <span class="delivery-price">$1459</span>
+            </div>
+            <button class="primary-button options-btn-pronto">Entregado</button>   
+
+        </section>
+
     </main>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+   https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-firestore.js"></script>
+
+  <script src="./JS/firebase.js"></script>  
    
     <script src="./JS/index.js" type="module"></script>
 </body>
