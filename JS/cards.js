@@ -206,10 +206,9 @@ export function loadChart(order){
         internalContainer.addEventListener('click',function(){
             loadOptions(options_itemsScrollX);
             toggleVisibility(chartCard);
-            toggleVisibility(sectionOptions);   
-
-            
+            toggleVisibility(sectionOptions);             
         });
+        
 
         const tittle = document.createElement('h3');
         tittle.classList.add('card-small-tittle');
@@ -244,19 +243,17 @@ function loadOptions(section){
         const tittle = document.createElement('h4');
         tittle.classList.add('options-item-name');
         tittle.innerText = item.nombre;
-
+        
         const itemsContainer = document.createElement('div');
         itemsContainer.classList.add('section-items-options-container');
 
-        const cardsContainer = document.createElement('div');
+        const cardsContainer = document.createElement('ul');
         cardsContainer.classList.add('chart-items-options-container-cards');
-
-        for (const gusto of item.ingredientesOpcionales) {
-            const CardPrueba = document.createElement('div');
-            CardPrueba.classList.add('card-prueba')
-            CardPrueba.innerText = 'prueba';  
-            cardsContainer.appendChild(CardPrueba);          
-        }
+        
+        armadorListaNegative(item, item.ingredientesFijos, cardsContainer);
+        armadorListaPositive(item, item.ingredientesOpcionales, cardsContainer);
+                    
+        
 
         itemsContainer.appendChild(cardsContainer);
 
@@ -271,3 +268,155 @@ function loadOptions(section){
         }  
 
     }
+
+    function armadorListaPositive(item, lista, contenedor){
+        for (let gusto of lista) {
+                        
+            const liItem = document.createElement('li');
+            const checkerContainer = document.createElement('div');
+            checkerContainer.classList.add('ingrediente-checker-container');
+            const spanItem = document.createElement('span');
+            spanItem.innerText = gusto;
+            checkerContainer.append(spanItem);
+            
+            if(item.familia == 'Tortugones'){
+
+                if(item.gustosSelecionados[gusto + '-A']
+                    ||item.gustosSelecionados[gusto + '-B']
+                    ||item.gustosSelecionados[gusto + '-C']
+                    ||item.gustosSelecionados[gusto + '-D']){
+                        const labelPorcionA = document.createElement('div');
+                        labelPorcionA.classList.add('porcion-A'); 
+                        if(item.gustosSelecionados[gusto + '-A']){
+                            labelPorcionA.classList.add('background-green')
+                        } else{
+                            labelPorcionA.classList.add('background-red')
+                        }                     
+                        const labelPorcionB = document.createElement('div');
+                        labelPorcionB.classList.add('porcion-B'); 
+                        if(item.gustosSelecionados[gusto + '-B']){
+                            labelPorcionB.classList.add('background-green')
+                        } else{
+                            labelPorcionB.classList.add('background-red')
+                        }                     
+                        const labelPorcionC = document.createElement('div');
+                        labelPorcionC.classList.add('porcion-C'); 
+                        if(item.gustosSelecionados[gusto + '-C']){
+                            labelPorcionC.classList.add('background-green')
+                        } else{
+                            labelPorcionC.classList.add('background-red')
+                        }                     
+                        const labelPorcionD = document.createElement('div');
+                        labelPorcionD.classList.add('porcion-D'); 
+                        if(item.gustosSelecionados[gusto + '-D']){
+                            labelPorcionD.classList.add('background-green')
+                        } else{
+                            labelPorcionD.classList.add('background-red')
+                        }   
+
+                        checkerContainer.append(labelPorcionA,labelPorcionB,labelPorcionC,labelPorcionD);
+                        liItem.appendChild(checkerContainer);
+                        contenedor.appendChild(liItem); 
+                    }
+            } else{
+
+                if(item.gustosSelecionados[gusto]){
+                const labelPorcionAll = document.createElement('div');
+                labelPorcionAll.classList.add('porcion-All');
+        
+                labelPorcionAll.classList.add('inputAll');
+                if(item.gustosSelecionados[gusto]){
+                    labelPorcionAll.classList.add('background-green')
+                } else{
+                    labelPorcionAll.classList.add('background-red')
+                } 
+                checkerContainer.append(labelPorcionAll);
+
+                liItem.appendChild(checkerContainer);
+        
+                contenedor.appendChild(liItem); 
+               }
+              }
+       
+    };
+    
+    
+    };
+
+
+    function armadorListaNegative(item, lista, contenedor){
+        for (let gusto of lista) {
+                        
+            const liItem = document.createElement('li');
+            const checkerContainer = document.createElement('div');
+            checkerContainer.classList.add('ingrediente-checker-container');
+            checkerContainer.classList.add('background-orange');
+            const spanItem = document.createElement('span');
+            spanItem.innerText = gusto;
+            checkerContainer.append(spanItem);
+            
+            if(item.familia == 'Tortugones'){
+                
+                if(!item.gustosSelecionados[gusto + '-A']
+                    ||!item.gustosSelecionados[gusto + '-B']
+                    ||!item.gustosSelecionados[gusto + '-C']
+                    ||!item.gustosSelecionados[gusto + '-D']){
+                    spanItem.innerText = `ATENCIÓN !!! ${gusto}`
+                        const labelPorcionA = document.createElement('div');
+                        labelPorcionA.classList.add('porcion-A'); 
+                        if(item.gustosSelecionados[gusto + '-A']){
+                            labelPorcionA.classList.add('background-green')
+                        } else{
+                            labelPorcionA.classList.add('background-red')
+                        }                     
+                        const labelPorcionB = document.createElement('div');
+                        labelPorcionB.classList.add('porcion-B'); 
+                        if(item.gustosSelecionados[gusto + '-B']){
+                            labelPorcionB.classList.add('background-green')
+                        } else{
+                            labelPorcionB.classList.add('background-red')
+                        }                     
+                        const labelPorcionC = document.createElement('div');
+                        labelPorcionC.classList.add('porcion-C'); 
+                        if(item.gustosSelecionados[gusto + '-C']){
+                            labelPorcionC.classList.add('background-green')
+                        } else{
+                            labelPorcionC.classList.add('background-red')
+                        }                     
+                        const labelPorcionD = document.createElement('div');
+                        labelPorcionD.classList.add('porcion-D'); 
+                        if(item.gustosSelecionados[gusto + '-D']){
+                            labelPorcionD.classList.add('background-green')
+                        } else{
+                            labelPorcionD.classList.add('background-red')
+                        }   
+
+                        checkerContainer.append(labelPorcionA,labelPorcionB,labelPorcionC,labelPorcionD);
+                        liItem.appendChild(checkerContainer);
+                        contenedor.appendChild(liItem); 
+                    }
+            } else{
+
+                if(!item.gustosSelecionados[gusto]){
+                    spanItem.innerText = `ATENCIÓN !!! ${gusto}`
+                    const labelPorcionAll = document.createElement('div');
+                    labelPorcionAll.classList.add('porcion-All');
+            
+                    labelPorcionAll.classList.add('inputAll');
+                    if(item.gustosSelecionados[gusto]){
+                        labelPorcionAll.classList.add('background-green')
+                    } else{
+                        labelPorcionAll.classList.add('background-red')
+                    } 
+                    checkerContainer.append(labelPorcionAll);
+
+                    liItem.appendChild(checkerContainer);
+            
+                    contenedor.appendChild(liItem); 
+                }
+              }
+       
+    };
+    
+    
+    };

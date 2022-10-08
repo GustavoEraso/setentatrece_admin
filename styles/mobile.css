@@ -23,8 +23,8 @@ a{
 }
 
 li{
-    list-style: none;
-
+    list-style: none;    
+    width: 100%;
 }
 
 html{
@@ -496,6 +496,10 @@ header img {
 
 }
 
+.chart-items-options-container-cards li {
+    display: flex;
+    justify-content: center;
+}
 
 .options-btn-volver{
     width: 90%;
@@ -615,6 +619,10 @@ header img {
 .background-white{
     background-color: var(--white);
 }
+
+.background-green{
+    background-color: #47992e;
+}
 .background-orange{
     background-color: #F7931A;
 }
@@ -626,3 +634,86 @@ header img {
     display: none;
 }
 
+
+
+
+.ingrediente-checker-container{
+    display: grid;
+    grid-template-rows: 20px 20px;
+    grid-template-columns: 4fr 20px 20px;
+    gap: 1px;
+    align-items: center;    
+    width: 90%;
+    height: max-content;
+    padding: 5px;
+    box-shadow: 0 0 5px var(--black);
+
+
+   
+ 
+
+
+}
+
+.ingrediente-checker-container span{
+    grid-area: 1 / 1 / 3 / 2;
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--black);
+}
+
+
+
+.porcion-All{
+    grid-area: 1 / 2 / 3 / 4;
+    width: 30px;
+    height: 30px;
+    overflow: hidden; 
+    border-radius: 50%;
+    border: 2px solid var(--black);
+    
+    
+    
+}
+
+
+.porcion-A{
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+    border-radius: 100% 2px 2px 2px;
+    border: 2px solid var(--black);
+    
+}
+.porcion-B{
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+    border-radius: 2px 100% 2px 2px;
+    border: 2px solid var(--black);
+    
+    
+}
+.porcion-C{    
+    width: 20px;
+    height: 20px;
+    overflow: hidden;   
+    border-radius: 2px 2px 2px 100%;
+    border: 2px solid var(--black);
+    
+    
+}
+.porcion-D{    
+    width: 20px;
+    height: 20px;
+    overflow: hidden;    
+    border-radius: 2px 2px 100% 2px;
+    border: 2px solid var(--black);
+    
+    ;
+  
+}
+
+.background-prueba{
+    background-color: #d39625;
+}
