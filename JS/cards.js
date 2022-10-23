@@ -103,7 +103,7 @@ const chart_clientData = document.querySelector('#chart_clientData');
 const chart_textCliente = document.querySelector('#chartClientName');
 const chart_idClient = document.querySelector('#chartClientTel');
 chart_idClient.addEventListener('click', function(){
-    popUp(`Quiere enviar un WhatsApp a ${currentOrder.nombre}`,sendWhatsApp , currentOrder.tel);
+    popUp(`Quiere enviar un WhatsApp a ${currentOrder.nombre}`,sendWhatsApp , `${currentOrder.prefijo}${currentOrder.cel});
 })
 const chart_listItems = document.querySelector('#chart_listItems');
 const chart_delayedTime = document.querySelector('#chart_delayedTime');
@@ -112,7 +112,7 @@ const options_clientData = document.querySelector('#options_clientData');
 const options_textClient = document.querySelector('#options_textClient');
 const options_idClient = document.querySelector('#options_idClient');
 options_idClient.addEventListener('click', function(){
-    popUp(`Quiere enviar un WhatsApp a ${currentOrder.nombre}`,sendWhatsApp ,currentOrder.prfijo + currentOrder.cel);
+    popUp(`Quiere enviar un WhatsApp a ${currentOrder.nombre}`,sendWhatsApp ,`${currentOrder.prfijo}${currentOrder.cel}`);
 })
 const options_listItems = document.querySelector('#options_listItems');
 const options_delayedTime = document.querySelector('#options_delayedTime');
