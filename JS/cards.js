@@ -43,7 +43,7 @@ export function loadOrders(section, array, titulo){
 
         const idClient = document.createElement('span');
         idClient.classList.add('card-order-small-id');
-        idClient.innerText = order.tel;
+        idClient.innerText = order.cel;
 
 
         const listContainer = document.createElement('div');
@@ -112,7 +112,7 @@ const options_clientData = document.querySelector('#options_clientData');
 const options_textClient = document.querySelector('#options_textClient');
 const options_idClient = document.querySelector('#options_idClient');
 options_idClient.addEventListener('click', function(){
-    popUp(`Quiere enviar un WhatsApp a ${currentOrder.nombre}`,sendWhatsApp , currentOrder.tel);
+    popUp(`Quiere enviar un WhatsApp a ${currentOrder.nombre}`,sendWhatsApp ,currentOrder.prfijo + currentOrder.cel);
 })
 const options_listItems = document.querySelector('#options_listItems');
 const options_delayedTime = document.querySelector('#options_delayedTime');
@@ -130,7 +130,7 @@ export function loadChart(order){
 
         chart_idClient.innerText= order.tel;
         chart_textCliente.innerText= order.nombre;
-        options_idClient.innerText= order.tel;
+        options_idClient.innerText= order.cel;
         options_textClient.innerText= order.nombre;
 
        

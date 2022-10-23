@@ -182,7 +182,7 @@ export async function init() {
   }
 
   export function sendWhatsApp(numero){
-    window.open(`https://wa.me/598${numero}`);
+    window.open(`https://wa.me/${numero}`);
   }
   
   
