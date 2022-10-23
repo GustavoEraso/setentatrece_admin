@@ -128,7 +128,7 @@ export function loadChart(order){
     startUpdateTimeChart(order);    
         
 
-        chart_idClient.innerText= order.tel;
+        chart_idClient.innerText= order.cel;
         chart_textCliente.innerText= order.nombre;
         options_idClient.innerText= order.cel;
         options_textClient.innerText= order.nombre;
