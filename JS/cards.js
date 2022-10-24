@@ -290,28 +290,28 @@ function loadOptions(section){
                         if(item.gustosSelecionados[gusto + '-A']){
                             labelPorcionA.classList.add('background-green')
                         } else{
-                            labelPorcionA.classList.add('background-red')
+                            labelPorcionA.classList.add('background-white')
                         }                     
                         const labelPorcionB = document.createElement('div');
                         labelPorcionB.classList.add('porcion-B'); 
                         if(item.gustosSelecionados[gusto + '-B']){
                             labelPorcionB.classList.add('background-green')
                         } else{
-                            labelPorcionB.classList.add('background-red')
+                            labelPorcionB.classList.add('background-white')
                         }                     
                         const labelPorcionC = document.createElement('div');
                         labelPorcionC.classList.add('porcion-C'); 
                         if(item.gustosSelecionados[gusto + '-C']){
                             labelPorcionC.classList.add('background-green')
                         } else{
-                            labelPorcionC.classList.add('background-red')
+                            labelPorcionC.classList.add('background-white')
                         }                     
                         const labelPorcionD = document.createElement('div');
                         labelPorcionD.classList.add('porcion-D'); 
                         if(item.gustosSelecionados[gusto + '-D']){
                             labelPorcionD.classList.add('background-green')
                         } else{
-                            labelPorcionD.classList.add('background-red')
+                            labelPorcionD.classList.add('background-white')
                         }   
 
                         checkerContainer.append(labelPorcionA,labelPorcionB,labelPorcionC,labelPorcionD);
@@ -328,7 +328,7 @@ function loadOptions(section){
                 if(item.gustosSelecionados[gusto]){
                     labelPorcionAll.classList.add('background-green')
                 } else{
-                    labelPorcionAll.classList.add('background-red')
+                    labelPorcionAll.classList.add('background-white')
                 } 
                 checkerContainer.append(labelPorcionAll);
 
