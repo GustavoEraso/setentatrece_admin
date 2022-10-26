@@ -627,7 +627,8 @@ header img {
     background-color: #F7931A;
 }
 .background-red{
-    background-color: rgb(223, 20, 20);
+    /*background-color: rgb(223, 20, 20);*/
+    background-color: #f71a9b;
 }
 
 .inactive{
