@@ -1,25 +1,26 @@
+import { statusSection } from "./index.js";
+import { setMap } from "./map.js";
 import { toggleVisibility , stopTimeControl, startUpdateTimeChart , popUp , sendWhatsApp } from "./utils.js";
 
 const ordenesPendientesContainer = document.querySelector('#ordenesPendientesContainer');
 
 
-export function loadOrders(section, array, titulo){
+export function loadOrders(section, array, title){
 
     section.innerText = "";
 
-    const title = document.createElement('h2');
-    title.classList.add('upper-title-cards-cardXs')
-    title.innerText = titulo.toUpperCase();
-    section.appendChild(title);
+    const upperTitle = document.createElement('h2');
+    upperTitle.classList.add('upper-title-cards-cardXs')
+    upperTitle.innerText = title.toUpperCase();
+    section.appendChild(upperTitle);
     
-    for(let order of array){
-        
+    for(let order of array){        
 
         const cardXs = document.createElement('article');
-        cardXs.classList.add('card-order-small');
-        if((Date.now() - order.fecha) < 1200000 ){
+        cardXs.classList.add('info-card');
+        if((Date.now() - order.date) < 1200000 ){
             cardXs.classList.add('background-white')
-        }else if((Date.now() - order.fecha) < 2400000 ){
+        }else if((Date.now() - order.date) < 2400000 ){
             cardXs.classList.add('background-orange')
         }else{
             cardXs.classList.add('background-red')            
@@ -29,25 +30,37 @@ export function loadOrders(section, array, titulo){
         cardXs.addEventListener('click',function(){
             loadChart(order);
             toggleVisibility(sectionPendingOrders);
-            toggleVisibility(chartCard);
+            switch (statusSection) {
+                case 'pending-orders':
+                    toggleVisibility(cartCard);
+                    break;
+                case 'delivery-orders':
+                    toggleVisibility(deliveryCard);
+                    break;
+            
+            }
+
+
+
+            
             
             
         });
 
         const orderSmallData = document.createElement('div');
-        orderSmallData.classList.add('order-small-data');
+        orderSmallData.classList.add('info-card__data-container');
 
         const textCliente = document.createElement('div');
-        textCliente.classList.add('card-order-small-cliente');
-        textCliente.innerText = order.nombre;
+        textCliente.classList.add('info-card__client-name');
+        textCliente.innerText = order.name;
 
         const idClient = document.createElement('span');
-        idClient.classList.add('card-order-small-id');
+        idClient.classList.add('info-card__client-cel');
         idClient.innerText = order.cel;
 
 
         const listContainer = document.createElement('div');
-        listContainer.classList.add('order-small-list-container');
+        listContainer.classList.add('info-card__list-container');
 
         const ul = document.createElement('ul');
                             let tortu = 0;
@@ -71,12 +84,12 @@ export function loadOrders(section, array, titulo){
                         }
         
         const timeContainer = document.createElement('div');
-        timeContainer.classList.add('order-small-time-container');
+        timeContainer.classList.add('info-card__time-container');
 
         const delayedTime = document.createElement('span');
-        delayedTime.classList.add('order-small-delayed-time');
+        delayedTime.classList.add('info-card__delayed-time');
         delayedTime.setAttribute('id',`delayedTime${array.indexOf(order)}`)
-        delayedTime.innerText = parseInt((Date.now() - order.fecha) / 60000);
+        delayedTime.innerText = parseInt((Date.now() - order.date) / 60000);
 
         const spanMin = document.createElement('span');
         spanMin.innerText = 'min'
@@ -95,51 +108,65 @@ export function loadOrders(section, array, titulo){
     }
 }
 
-let currentOrder ={};
+export let currentOrder ={};
 
 
-
-const chart_clientData = document.querySelector('#chart_clientData');
-const chart_textCliente = document.querySelector('#chartClientName');
-const chart_idClient = document.querySelector('#chartClientTel');
-chart_idClient.addEventListener('click', function(){
-    popUp(`Quiere enviar un WhatsApp a ${currentOrder.nombre}`,sendWhatsApp , `${currentOrder.prefijo}${currentOrder.cel}`);
+const cart_clientData = document.querySelector('#cart_clientData');
+const cart_textCliente = document.querySelector('#cartClientName');
+const cart_idClient = document.querySelector('#cartClientTel');
+cart_idClient.addEventListener('click', function(){
+    popUp(`Quiere enviar un WhatsApp a ${currentOrder.name}`,sendWhatsApp , `${currentOrder.prefix}${currentOrder.cel}`);
 })
-const chart_listItems = document.querySelector('#chart_listItems');
-const chart_delayedTime = document.querySelector('#chart_delayedTime');
+const cart_listItems = document.querySelector('#cart_listItems');
+const cart_delayedTime = document.querySelector('#cart_delayedTime');
 
 const options_clientData = document.querySelector('#options_clientData');
 const options_textClient = document.querySelector('#options_textClient');
 const options_idClient = document.querySelector('#options_idClient');
 options_idClient.addEventListener('click', function(){
-    popUp(`Quiere enviar un WhatsApp a ${currentOrder.nombre}`,sendWhatsApp ,`${currentOrder.prefijo}${urrentOrder.cel}`);
+    popUp(`Quiere enviar un WhatsApp a ${currentOrder.name}`,sendWhatsApp ,`${currentOrder.prefix}${currentOrder.cel}`);
 })
-const options_listItems = document.querySelector('#options_listItems');
-const options_delayedTime = document.querySelector('#options_delayedTime');
+const optionsListItems = document.querySelector('#optionsListItems');
+const optionsDelayedTime = document.querySelector('#optionsDelayedTime');
 
 const options_itemsScrollX = document.querySelector('#options_itemsScrollX');
+
+const delivery_clientData = document.querySelector('#delivery_clientData');
+const delivery_textClient = document.querySelector('#delivery_ClientName');
+const delivery_idClient = document.querySelector('#delivery_ClientTel');
+delivery_idClient.addEventListener('click', function(){
+    popUp(`Quiere enviar un WhatsApp a ${currentOrder.name}`,sendWhatsApp , `${currentOrder.prefix}${currentOrder.cel}`);
+})
+const delivery_listItems = document.querySelector('#delivery_listItems');
+const delivery_delayedTime = document.querySelector('#delivery_delayedTime');
+
+
 
 
 
 export function loadChart(order){
     currentOrder= {};
-    currentOrder = order;
+    currentOrder = order;    
+    setMap(order);
+    order.status == 'pronto_para_reparto'
+    ? deliveryBtnDelivered.classList.remove('inactive')
+    : deliveryBtnDelivered.classList.add('inactive');
 
-    startUpdateTimeChart(order);    
+    startUpdateTimeChart(order);  
         
 
-        chart_idClient.innerText= order.cel;
-        chart_textCliente.innerText= order.nombre;
+        cart_idClient.innerText= order.cel;
+        cart_textCliente.innerText= order.name;
         options_idClient.innerText= order.cel;
-        options_textClient.innerText= order.nombre;
-
-       
-        
+        options_textClient.innerText= order.name; 
+        delivery_idClient.innerText= order.cel;
+        delivery_textClient.innerText= order.name; 
 
         
     
-        chart_listItems.innerText= "";
-        options_listItems.innerText= "";
+        cart_listItems.innerText= "";
+        optionsListItems.innerText= "";
+        delivery_listItems.innerText= "";
                             let tortu = 0;
                             let burger = 0;
                         for (const item of order.items) {
@@ -152,49 +179,60 @@ export function loadChart(order){
                         if(tortu){
                             const liTortu = document.createElement('li');
                             liTortu.innerText = `Tortugones: ${tortu}`
-                            chart_listItems.appendChild(liTortu.cloneNode(true));
-                            options_listItems.appendChild(liTortu.cloneNode(true));
+                            cart_listItems.appendChild(liTortu.cloneNode(true));
+                            optionsListItems.appendChild(liTortu.cloneNode(true));
+                            delivery_listItems.appendChild(liTortu.cloneNode(true));
                         };
                         if(burger){
                             const liBurger = document.createElement('li');
                             liBurger.innerText = `Hamburguesas: ${burger}`
-                            chart_listItems.appendChild(liBurger.cloneNode(true));
-                            options_listItems.appendChild(liBurger.cloneNode(true));
+                            cart_listItems.appendChild(liBurger.cloneNode(true));
+                            optionsListItems.appendChild(liBurger.cloneNode(true));
+                            delivery_listItems.appendChild(liBurger.cloneNode(true));
                         };
 
-        const delayedTime = parseInt((Date.now() - order.fecha) / 60000);
-        chart_delayedTime.innerText =delayedTime;
-        options_delayedTime.innerText =delayedTime;
+        const delayedTime = parseInt((Date.now() - order.date) / 60000);
+        cart_delayedTime.innerText =delayedTime;
+        optionsDelayedTime.innerText =delayedTime;
+        delivery_delayedTime.innerText =delayedTime;
 
        
         if(delayedTime < 20 ){
-            chart_clientData.classList.remove('background-orange')
+            cart_clientData.classList.remove('background-orange')
             options_clientData.classList.remove('background-orange')
-            chart_clientData.classList.remove('background-red')
+            delivery_clientData.classList.remove('background-orange')
+            cart_clientData.classList.remove('background-red')
             options_clientData.classList.remove('background-red')
-            chart_clientData.classList.add('background-white')
+            delivery_clientData.classList.remove('background-red')
+            cart_clientData.classList.add('background-white')
             options_clientData.classList.add('background-white')
+            delivery_clientData.classList.add('background-white')
         }else if(delayedTime < 40 ){
           
-           chart_clientData.classList.remove('background-white')
+           cart_clientData.classList.remove('background-white')
            options_clientData.classList.remove('background-white')
-           chart_clientData.classList.remove('background-red')
+           delivery_clientData.classList.remove('background-white')
+           cart_clientData.classList.remove('background-red')
            options_clientData.classList.remove('background-red')
-            chart_clientData.classList.add('background-orange')
+           delivery_clientData.classList.remove('background-red')
+            cart_clientData.classList.add('background-orange')
             options_clientData.classList.add('background-orange')
+            delivery_clientData.classList.add('background-orange')
           }else{
-            chart_clientData.classList.remove('background-white')
+            cart_clientData.classList.remove('background-white')
             options_clientData.classList.remove('background-white')
-            chart_clientData.classList.remove('background-orange')
+            delivery_clientData.classList.remove('background-white')
+            cart_clientData.classList.remove('background-orange')
             options_clientData.classList.remove('background-orange')
-            chart_clientData.classList.add('background-red')            
+            delivery_clientData.classList.remove('background-orange')
+            cart_clientData.classList.add('background-red')            
             options_clientData.classList.add('background-red')            
+            delivery_clientData.classList.add('background-red')            
         };
 
-    const chartItemsContainer = document.querySelector('#chartItemsContainer');  
+    const cartItemsContainer = document.querySelector('#cartItemsContainer');  
     
-    chartItemsContainer.innerText= "";
-
+    cartItemsContainer.innerText= "";
     
     for(let product of order.items){
 
@@ -205,28 +243,27 @@ export function loadChart(order){
         internalContainer.classList.add('card-small-internalContainer');
         internalContainer.addEventListener('click',function(){
             loadOptions(options_itemsScrollX);
-            toggleVisibility(chartCard);
+            toggleVisibility(cartCard);
             toggleVisibility(sectionOptions);             
         });
         
 
-        const tittle = document.createElement('h3');
-        tittle.classList.add('card-small-tittle');
-        tittle.innerText = product.nombre;        
+        const title = document.createElement('h3');
+        title.classList.add('card-small-title');
+        title.innerText = product.name;        
 
         const precio = document.createElement('span');
         precio.classList.add('card-small-precio');
         precio.innerText = `$${product.precio}`;
 
-
-        internalContainer.appendChild(tittle);
+        internalContainer.appendChild(title);
         
         internalContainer.appendChild(precio);
 
         cardXs.appendChild(internalContainer);
 
 
-        chartItemsContainer.appendChild(cardXs);
+        cartItemsContainer.appendChild(cardXs);
 
     }
 }
@@ -240,15 +277,15 @@ function loadOptions(section){
         const card = document.createElement('div');
         card.classList.add('section-items-options-card');
         
-        const tittle = document.createElement('h4');
-        tittle.classList.add('options-item-name');
-        tittle.innerText = item.nombre;
+        const title = document.createElement('h4');
+        title.classList.add('options-item-name');
+        title.innerText = item.name;
         
         const itemsContainer = document.createElement('div');
         itemsContainer.classList.add('section-items-options-container');
 
         const cardsContainer = document.createElement('ul');
-        cardsContainer.classList.add('chart-items-options-container-cards');
+        cardsContainer.classList.add('cart-items-options-container-cards');
         
         armadorListaNegative(item, item.ingredientesFijos, cardsContainer);
         armadorListaPositive(item, item.ingredientesOpcionales, cardsContainer);
@@ -257,7 +294,7 @@ function loadOptions(section){
 
         itemsContainer.appendChild(cardsContainer);
 
-        card.appendChild(tittle);
+        card.appendChild(title);
         card.appendChild(itemsContainer);
 
         section.appendChild(card);

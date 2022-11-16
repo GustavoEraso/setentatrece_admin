@@ -6,7 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control"  content="no-cache" />
     <link rel="stylesheet" href="./styles/mobile.css?v=0.0.1">
-    <title>Document</title>
+    <title>Setenta Trece gestion</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
+     integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
+     crossorigin=""/>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
+ integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
+ crossorigin=""></script>
     
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,161 +26,204 @@
     <header>
         <!-- &#128100; ES LA SILUETA DE USUARIO -->
         <!-- &#8801; ES menu hamburguesa -->
-        <span class="menu-user-button" id="menuUserButton">&#8801;</span> 
+        <button class="menu-user-button" id="menuUserButton">&#8801;</button> 
 
         <aside class="aside-user-menu " id="userMenu"> 
-            <section class="user-menu_user">
-                <img class="img-user inactive" id="imgUser" src="" alt="foto de perfil">
-                <span class="user-name" id="userName">Debe iniciar sesion</span> 
-                <button class="button-login primary-button" id="btnLogIn">Iniciar Sesión</button> 
-                <button class="button-logout primary-button inactive" id="btnLogOut">Cerrar Sesión</button>             
+            <section class="aside-user-menu__user-section">
+                <img class="aside-user-menu__user-img inactive" id="imgUser" src="" alt="foto de perfil">
+                <span class="aside-user-menu__user-name" id="userName">Debe iniciar sesion</span> 
+                <button class="primary-button " id="btnLogIn">Iniciar Sesión</button> 
+                <button class="secondary-button secondary-button--center inactive" id="btnLogOut">Cerrar Sesión</button>             
             </section>
-            <section class="user-menu-button-container inactive" id="UserMenuBtnContainer">
-                <button class="btn-aside-user btn-ordenes-pendientes"id="userMenu_pendingOrders">ORDENES PENDIENTES</button>
-                <button class="btn-aside-user btn-ordenes-para-reparto">ORDENES PARA REPARTO</button>
-                <button class="btn-aside-user btn-ordenes-para-entregadas">ORDENES ENTREGADAS</button>
+            <section class="aside-user-menu__buttons-container inactive" id="UserMenuBtnContainer">
+                <button class="navigator-button navigator-button--small navigator-button--red"id="userMenu_pendingOrders">ORDENES INGRESADAS</button>
+                <button class="navigator-button navigator-button--small navigator-button--yellow" id="userMenu_deliveryOrders" >ORDENES PARA REPARTO</button>
+                <button class="navigator-button navigator-button--small navigator-button--blue" >VER MAPA </button>
+                <button class="navigator-button navigator-button--small navigator-button--green">ORDENES FINALIZADAS</button>
 
 
             </section>   
-            <button class="WhatsApp-button user-menu-WhatsApp-button" id="userMenu_btnWhatsApp" >Contactar por WhatsApp</button>
+            <button class="WhatsApp-button" id="userMenu_btnWhatsApp" >Contactar por WhatsApp</button>
         </aside>
+
         <a href="index.html" class="header-logo-a"><img src="./assets/img/logos/setentaTrece320px.jpg" alt="Logo Setenta Trece"></a>           
 
     </header>
     <main class="main-inicio">
+
         <section class="inicio-button-container inactive" id="inicioBtnContainer">
-            <button class="btn-inicio btn-ordenes-pendientes" id="inicioBtnPendingOrders">ORDENES PENDIENTES</button>
-            <button class="btn-inicio btn-ordenes-para-reparto">ORDENES PARA REPARTO</button>
-            <button class="btn-inicio btn-ordenes-para-entregadas">ORDENES ENTREGADAS</button>
+            <button class="navigator-button navigator-button--red" id="inicioBtnPendingOrders" >ORDENES INGRESADAS</button>
+            <button class="navigator-button navigator-button--yellow" id="inicioDeliveryOrders">ORDENES PARA REPARTO</button>
+            <button class="navigator-button navigator-button--blue" id="inicioAllOrdersLocations">VER MAPA </button>
+            <button class="navigator-button navigator-button--green">ORDENES FINALIZADAS</button>
         </section>
-        <section class="section-ordenes-pendientes inactive" id="sectionPendingOrders">
-            <button class="primary-button ordenes-pendietnes-btn-volver"  id="btn_ordenesPendientesVolver">volver</button> 
-            <div class="ordenes-pendientes-container" id="ordenesPendientesContainer">
-                            <!-- ACASE INSERTANDEMANERADINAMICA LAS CARDS -->
+
+        <section class="section-pending-orders inactive" id="sectionPendingOrders">
+            <button class="primary-button "  id="btn_ordenesPendientesVolver">volver</button> 
+            <div class="section-pending-orders__orders-container" id="ordenesPendientesContainer">
+                            <!-- ACASE INSERTAN DE MANERA DINAMICA LAS CARDS -->
             </div>                                        
 
         </section>
 
-        <aside class="chart-card inactive " id="chartCard">
-            <section class=" chart-info-container">
-                <section class="card-order-small" id="chart_clientData">
-                    <div class="order-small-data">
-                        <div class="card-order-small-cliente" id="chartClientName"></div>
-                        <span class="card-order-small-id" id="chartClientTel" ></span>
-                        <div class="order-small-list-container" id="chart_listItems">
+        <aside class="cart-card inactive " id="cartCard">
+            <section class=" cart-card__info-container">
+                <section class="info-card" id="cart_clientData">
+                    <div class="info-card__data-container">
+                        <div class="info-card__client-name" id="cartClientName"></div>
+                        <span class="info-card__client-cel" id="cartClientTel" ></span>
+                        <div class="info-card__list-container" id="cart_listItems">
                             <ul>
                                 <!-- se inserta la lista desde js -->
                                 
                             </ul>
                         </div>
                     </div>
-                    <div class="order-small-time-container">
-                        <span class="order-small-delayed-time" id="chart_delayedTime"></span>
+                    <div class="info-card__time-container">
+                        <span class="info-card__delayed-time" id="cart_delayedTime"></span>
                         <span>min</span>
                     </div>
                 </section>
             </section>
-            <button class="primary-button chart-btn-volver" id="chart_btnVolver">volver</button> 
-            <button class="primary-button chart-btn-info-entrega">Datos de entrega</button> 
-            <h3 class="chart-detail-title">Lista de Items:</h3> 
-            <div class="chart-items-container">
-                <div class="chart-items-container-cards" id="chartItemsContainer">
-                    <!-- CONTENEDOR DE CARDS DE CARRITO -->
-                                                                            
+            <button class="primary-button " id="cart_btnVolver">volver</button> 
+            <button class="primary-button" id="cartDeliveryInfo">Datos de entrega</button> 
+            <h3 class="cart-card__title">Lista de Items:</h3> 
+            <div class="cart-card__scroll-container">
+                <div class="cart-card__items-container" id="cartItemsContainer">
+
+                    <!-- CONTENEDOR DE CARDS DE CARRITO -->                                                                           
                     
                 </div>                
-            </div>                   
-            
-
-            
+            </div> 
                                   
-            <button class="primary-button chart-btn-cancelar">Cancelar Orden</button>     
-            <button class="primary-button chart-btn-pronto">Pronto para reparto</button>   
+            <button class="primary-button primary-button--red-gradient">Cancelar Orden</button>     
+            <button class="primary-button primary-button--green-gradient" id="cartReadyForDeliveryBtn">Pronto para reparto</button>   
 
         </aside>
 
         <section class="section-options  inactive" id="sectionOptions">
-            <section class=" options-info-container">
-                                                    <article class="card-order-small" id="options_clientData">
-                                                        <div class="order-small-data" >
-                                                            <div class="card-order-small-cliente" id="options_textClient"></div>
-                                                            <div class="card-order-small-id" id="options_idClient"></div>
-                                                            <div class="order-small-list-container">
-                                                                <ul id="options_listItems">
-                                                                    
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                        <div class="order-small-time-container">
-                                                            <span class="order-small-delayed-time" id="options_delayedTime"></span>
-                                                            <span>min</span>
-                                                        </div>
-                                                    </article>
+            <section class=" section-options__info-container">
+                <article class="info-card" id="options_clientData">
+                    <div class="info-card__data-container" >
+                        <div class="info-card__client-name" id="options_textClient"></div>
+                        <div class="info-card__client-cel" id="options_idClient"></div>
+                        <div class="info-card__list-container">
+                            <ul id="optionsListItems">
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-card__time-container">
+                        <span class="info-card__delayed-time" id="optionsDelayedTime"></span>
+                        <span>min</span>
+                    </div>
+                </article>
             </section>
             
-            <div class="section-options-scroll-x">
-                <div class="section-options-scroll-x-cards" id="options_itemsScrollX">      
+            <div class="section-options__scoll-container">
+                <div class="section-options__cards-container" id="options_itemsScrollX">     
 
-                                
                     <!-- ACA SI INSERTAN LOS PRODUCTOS SELECIONADOS PARA VER LOS GUSTOS -->
-           
-                                
-                                
                                 
                 </div> 
             </div>         
                                   
-            <button class="primary-button options-btn-volver" id="options_btnVolver">volver</button> 
-            <button class="primary-button options-btn-pronto">Pronto para reparto</button>   
-            <button class="primary-button options-btn-info-entrega">Datos de entrega</button>
+            <button class="primary-button " id="options_btnVolver">volver</button> 
+            <button class="primary-button primary-button--green-gradient">Pronto para reparto</button>   
+            <button class="primary-button " id="optionsDeliveryInfo">Datos de entrega</button>
 
         </section>
+       
 
-        <section class="section-delivery inactive ">
-            <section class=" options-info-container">
-                                                    <article class="card-order-small">
-                                                        <div class="order-small-data">
-                                                            <div class="card-order-small-cliente">Cliente: </div>
-                                                            <div class="card-order-small-id">094144657</div>
-                                                            <div class="order-small-list-container">
-                                                                <ul>
-                                                                    <li>Tortugon: 1</li>
-                                                                    <li>pizza: 1 metro</li>
-                                                                    <li>Tortugon: 1</li>
-                                                                    <li>pizza: 1 metro</li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                        <div class="order-small-time-container">
-                                                            <span class="order-small-delayed-time">10</span>
-                                                            <span>min</span>
-                                                        </div>
-                                                    </article>
+        <section class="section-delivery inactive " id="deliveryCard">
+            <section class=" section-delivery__info-container">
+                <article class="info-card" id="delivery_clientData">
+                    <div class="info-card__data-container">
+                        <div class="info-card__client-name" id="delivery_ClientName"></div>
+                        <div class="info-card__client-cel" id="delivery_ClientTel"></div>
+                        <div class="info-card__list-container" >
+                            <ul id="delivery_listItems">
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-card__time-container">
+                        <span class="info-card__delayed-time" id="delivery_delayedTime"></span>
+                        <span>min</span>
+                    </div>
+                </article>
             </section>
             
                                             
-                                <div class="section-info-delivery-container">
-                                    <div class="delivery-info-container">
-                                       <img class="mapa-provisorio" src="./assets/img/mapa_provisorio.jpg" alt="">
-                                       <section class="delivery-info-text">
-                                        <span>Descripcion:</span>
-                                        <p class="delivery-info-description">
-                                           Casa verde con porton de madera, auto blanco afuera
-                                        </p>
+             <div class="section-delivery__delivery-info">
+                    <div class="section-delivery__map-container">
+                        <div class="map" id="orderMap"></div>                        
+                        <section class="section-delivery__text-container">
+                            <span>Descripcion:</span>
+                            <p class="section-delivery__text" id="deliveryDescription">
+                            
+                            </p>
 
-                                       </section>                                 
-                                    </div>                
-                                </div>                   
-                                                                  
-                  
+                        </section>                                 
+                    </div>                
+                </div>   
                                   
-            <button class="primary-button options-btn-volver">volver</button> 
+            <button class="primary-button" id="deliveryBtnReturn">volver</button> 
             <div class="delivery-price-container">
                 <span class="delivery-price">$1459</span>
             </div>
-            <button class="primary-button options-btn-pronto">Entregado</button>   
+            <button class="primary-button primary-button--green-gradient" id="deliveryBtnDelivered">Entregado</button>   
 
         </section>
+
+
+
+
+
+
+        <section class="section-delivery inactive " id="sectionAllOrdersLocations">
+            <section class=" section-delivery__info-container">
+                <article class="info-card" >
+                    <div class="info-card__data-container">
+                        <div class="info-card__client-name" ></div>
+                        <div class="info-card__client-cel" ></div>
+                        <div class="info-card__list-container" >
+                            <ul >
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-card__time-container">
+                        <span class="info-card__delayed-time" ></span>
+                        <span>min</span>
+                    </div>
+                </article>
+            </section>            
+                                            
+             <div class="section-delivery__delivery-info">
+                    <div class="section-delivery__map-container">
+                        <div class="map" id="allOrdersMap"></div>                        
+                        <section class="section-delivery__text-container">
+                            <span>Descripcion:</span>
+                            <p class="section-delivery__text" >
+                            
+                            </p>
+
+                        </section>                                 
+                    </div>                
+                </div>   
+                                  
+            <button class="primary-button" id="returnButtonAllOrdersLocations">volver</button> 
+            <div class="delivery-price-container">
+                <span class="delivery-price">$1459</span>
+            </div>
+            <button class="primary-button primary-button--green-gradient" >Entregado</button>   
+
+        </section>
+
+
+
+
 
         
     </main>
@@ -180,8 +231,8 @@
         <div class="popUp-card">
             <h5 class="popUp-text" id="popUpText"> Seguro que desea cancelar el pedido</h5>
             <div class="popUp-buttons-container" id="popUpBtnContainer">
-                <button class="primary-button chart-btn-cancelar" id="btn_popUpCancel">Cancelar accion</button>     
-                <button class="primary-button chart-btn-pronto" id="btn_popUpConfirm">Confirmar accion</button>
+                <button class="primary-button cart-btn-cancelar" id="btn_popUpCancel">Cancelar accion</button>     
+                <button class="primary-button cart-btn-pronto" id="btn_popUpConfirm">Confirmar accion</button>
             </div>
         </div>
     </section>
