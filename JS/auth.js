@@ -2,7 +2,7 @@
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
 
-console.log({auth})
+
 
 auth.languageCode = "es";
 

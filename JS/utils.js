@@ -1,7 +1,7 @@
 import { login, logout } from "./auth.js";
 import { btnLogIn , btnLogOut, statusSection  } from "./index.js"
-import { loadOrders } from "./cards.js";
-import { addMarker } from "./map.js";
+import { renderOrders } from "./cards.js";
+import { addAllOrdersToMap } from "./map.js";
 
 
 const db = firebase.firestore();
@@ -10,11 +10,11 @@ let currentUser;
 
 
 const userMenu = document.querySelector('#userMenu');
-const imgUser = document.querySelector('#imgUser');
-const userName = document.querySelector('#userName');
-const UserMenuBtnContainer = document.querySelector('#UserMenuBtnContainer');
+const userMenu_img = document.querySelector('#userMenu_img');
+const userMenu_name = document.querySelector('#userMenu_name');
+const userMenu_BtnContainer = document.querySelector('#userMenu_BtnContainer');
 
-const inicioBtnContainer = document.querySelector('#inicioBtnContainer');
+const inicio_BtnContainer = document.querySelector('#inicio_BtnContainer');
 const sectionPendingOrders = document.querySelector('#sectionPendingOrders');
 const cartCard = document.querySelector('#cartCard');
 const sectionOptions = document.querySelector('#sectionOptions');
@@ -27,7 +27,7 @@ const sectionPopUp = document.querySelector('#sectionPopUp');
 document.addEventListener("mouseup", function(event) {
 
   if (!userMenu.contains(event.target) 
-       && !menuUserButton.contains(event.target) 
+       && !floatButton.contains(event.target) 
          && !userMenu.classList.contains('inactive')) {
 
       toggleVisibility(userMenu);
@@ -38,7 +38,6 @@ document.addEventListener("mouseup", function(event) {
 
 
 export function toggleVisibility(elemento){
-
         elemento.classList.toggle('inactive');    
 
 }
@@ -46,9 +45,8 @@ export function toggleVisibility(elemento){
 export async function doLogIn(){
     try {
      
-      currentUser = await login();
-  
-      console.log(currentUser)
+      currentUser = await login(); 
+      
       init();
     } catch (error) {
       console.error(error);
@@ -58,29 +56,28 @@ export function doLogout(){
     logout()
     toggleVisibility(btnLogOut);
     toggleVisibility(btnLogIn);
-    imgUser.setAttribute('src','');
-    toggleVisibility(imgUser);
-    userName.innerText = 'Debe iniciar sesion';
-    toggleVisibility(UserMenuBtnContainer);
-    inicioBtnContainer.classList.add('inactive');
+    userMenu_img.setAttribute('src','');
+    toggleVisibility(userMenu_img);
+    userMenu_name.innerText = 'Debe iniciar sesion';
+    toggleVisibility(userMenu_BtnContainer);
+    inicio_BtnContainer.classList.add('inactive');
 }
 
 export async function init() {
-    //localStorage.setItem("user", JSON.stringify(currentUser));
     toggleVisibility(btnLogIn);
     toggleVisibility(btnLogOut);
-    imgUser.setAttribute('src', currentUser.photoURL);
-    toggleVisibility(imgUser);
-    userName.innerText = currentUser.displayName;
-    toggleVisibility(UserMenuBtnContainer);
-    toggleVisibility(inicioBtnContainer);
+    userMenu_img.setAttribute('src', currentUser.photoURL);
+    toggleVisibility(userMenu_img);
+    userMenu_name.innerText = currentUser.displayName;
+    toggleVisibility(userMenu_BtnContainer);
+    toggleVisibility(inicio_BtnContainer);
     toggleVisibility(userMenu);
   
   }
 
-  let listaPedidos = [];
+  let ordersList = [];
 
-  export async function loadPedidos(status,section,title) {
+  export async function loadOrders(status,section,title) {
     let orders = [];    
   
     try {
@@ -89,10 +86,10 @@ export async function init() {
 
       orders.sort((a,b)=> a.date - b.date); 
   
-      listaPedidos = orders;
+      ordersList = orders;
 
   
-       loadOrders(section, orders, title);
+       renderOrders(section, orders, title);
        startUpdateTimePendingOrders();
     } catch (error) {
       console.error(error);
@@ -103,21 +100,50 @@ export async function init() {
 
 
 
+ let ordersOnMap = [];
 
-  export async function loadLocations(status) {
-    let pedidos = [];
+  export async function loadLocations(...status) {
+   
+    let orders = [];
   
-    try {
-      const response = await getItems(status);
-      pedidos = [...response];
-  
-      listaPedidos = pedidos;
+    try {   
+      const response = await getItems(...status);
+      orders = [...response];    
 
-      addMarker(pedidos);
+      orders.sort((a,b)=> a.date - b.date); 
+      
+      let areDifferent = false
+
+      let oldOrders = [];
+      ordersOnMap.map((order)=> oldOrders.push(order.id));
+
+      let newOrders = [];
+      orders.map((order)=> newOrders.push(order.id));
+
+      
+      newOrders.map((order)=>{
+        if(!oldOrders.includes(order)){         
+          areDifferent = true;} 
+      })     
+      
+      oldOrders.map((order)=>{
+        if(!newOrders.includes(order)){         
+          areDifferent = true;} 
+      })   
+      
+      if(areDifferent){
+        ordersOnMap = orders;
+        addAllOrdersToMap(orders);
+        startUpdateAllOrdersMap(status)      
+        
+      }
+     
       
     } catch (error) {
       console.error(error);
     }
+
+
   }
 
 
@@ -125,22 +151,32 @@ export async function init() {
 
 
 
-  async function getItems(status) {
-    try {
-      let items = [];
-      const response = await db
-        .collection("ventas")
-        .where("status", "==", status)
-        .get();
-  
-      response.forEach(function (item) {
-        items.push(item.data());
-      });
-  
-      return items;
-    } catch (error) {
-      throw new Error(error);
+  async function getItems(...statusList) {
+
+    let items = [];
+
+    statusList = statusList.flat()
+   
+
+    
+    for (const status of statusList) {
+    
+      
+      try {
+        const response = await db
+          .collection("ventas")
+          .where("status", "==", status)
+          .get();
+    
+        response.forEach(function (item) {
+          items.push(item.data());
+        });
+    
+      } catch (error) {
+        throw new Error(error);
+      }
     }
+    return items;
   };
 
 
@@ -154,7 +190,6 @@ export async function init() {
         docId = i.id;
         docHistory = order.history ||[];
       });
-
             
       docHistory.push({
         status: newStatus,
@@ -181,17 +216,24 @@ export async function init() {
       await update(colecction,order,newStatus);
       switch (statusSection) {
           case "pending-orders" :
-              await loadPedidos('ingresado',ordenesPendientesContainer,'Ordenes Pendientes:')
+              await loadOrders('ingresado',sectionPendingOrders_ordersContainer,'Ordenes Pendientes:')
               startUpdateTimePendingOrders();
               toggleVisibility(sectionPendingOrders);
               
               break;
-              case "all-orders-locations":    
-              await loadLocations("ingresado");
+          case "delivery-orders":    
+              await loadLocations("pronto_para_reparto");
+              toggleVisibility(sectionPendingOrders);
+              break;
+                       
+          case "all-orders-locations":    
+              await loadLocations("ingresado","pronto_para_reparto");
               toggleVisibility(sectionAllOrdersLocations);            
               break;                    
           }
-  toggleVisibility(cartCard);    
+  cartCard.classList.add('inactive');
+  sectionOptions.classList.add('inactive');    
+  deliveryCard.classList.add('inactive');    
 }catch(error){
   throw new Error(error)
 }
@@ -212,15 +254,23 @@ export async function init() {
     
   }
 
+  export function startUpdateAllOrdersMap(...status){
+   
+    
+    stopTimeControl();     
+      intervalId = setInterval(updateAllOrdersMap, 30000, ...status);
+    
+  }
+
   export function stopTimeControl(){
     clearInterval(intervalId);
     intervalId= null;
   }
   
   function updateTimePendingOrders(){
-    console.log('se esta ejecutando intervalo update time PENDING ORDERS')
-    for (const pedido of listaPedidos) {
-      const posicion = listaPedidos.indexOf(pedido);
+   
+    for (const pedido of ordersList) {
+      const posicion = ordersList.indexOf(pedido);
       const backgroundCard = document.querySelector('#cardOrderSmall' + posicion);
       const spanDelayedTime = document.querySelector('#delayedTime' + posicion);
 
@@ -245,13 +295,13 @@ export async function init() {
   }
 
   function updateTimeChart(order){
-    console.log('se esta ejecutando intervalo update time CHART')
-    const cart_backgroundCard = document.querySelector('#cart_clientData');
-    const options_backgroundCard = document.querySelector('#options_clientData');
-    const delivery_backgroundCard = document.querySelector('#delivery_clientData');
-    const cart_spanDelayedTime = document.querySelector('#cart_delayedTime')
-    const options_spanDelayedTime = document.querySelector('#optionsDelayedTime')
-    const delivery_spanDelayedTime = document.querySelector('#delivery_delayedTime')
+   
+    const cart_backgroundCard = document.querySelector('#cartCard_clientDataMainContainer');
+    const options_backgroundCard = document.querySelector('#sectionOptions_clientData');
+    const delivery_backgroundCard = document.querySelector('#deliveryCard_clientData');
+    const cart_spanDelayedTime = document.querySelector('#cartCard_delayedTime')
+    const options_spanDelayedTime = document.querySelector('#sectionOptions_delayedTime')
+    const delivery_spanDelayedTime = document.querySelector('#deliveryCard_delayedTime')
 
       const delayedTime = parseInt((Date.now() - order.date) / 60000);
       
@@ -293,26 +343,31 @@ export async function init() {
     
   }
 
+  
+  function updateAllOrdersMap(status){
+   
+    loadLocations(status)
+  }
+  
   export function sendWhatsApp(numero){
     window.open(`https://wa.me/${numero}`);
   };
   
-  
 
-const popUpText = document.querySelector('#popUpText');
+const sectionPopUp_text = document.querySelector('#sectionPopUp_text');
 let popUpFunction_calback;
 let popUpFunction_parametros;
 
 let popUpFunction = ()=> popUpFunction_calback(...popUpFunction_parametros);
 
-const popUpCancelBtn = document.querySelector('#btn_popUpCancel');
-popUpCancelBtn.addEventListener('click', function(){
+const sectionPopUp_btn_cancel = document.querySelector('#sectionPopUp_btn_cancel');
+sectionPopUp_btn_cancel.addEventListener('click', function(){
   toggleVisibility(sectionPopUp);
   
 });
 
-const popUpConfirmBtn = document.querySelector('#btn_popUpConfirm');
-popUpConfirmBtn.addEventListener('click',function(){    
+const sectionPopUp_btn_confirm = document.querySelector('#sectionPopUp_btn_confirm');
+sectionPopUp_btn_confirm.addEventListener('click',function(){    
   popUpFunction();
   toggleVisibility(sectionPopUp);
 });
@@ -321,7 +376,7 @@ popUpConfirmBtn.addEventListener('click',function(){
 
 export function popUp(text, calback, ...parametros){
 
-  popUpText.innerText = text;
+  sectionPopUp_text.innerText = text;
   popUpFunction_calback = calback;
   popUpFunction_parametros = parametros
   

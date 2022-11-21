@@ -1,11 +1,11 @@
 import { currentOrder } from "./cards.js";
-import { toggleVisibility , doLogIn, doLogout, loadPedidos , stopTimeControl, startUpdateTimePendingOrders, popUp, sendWhatsApp, update, loadLocations, orderChangeStatus } from "./utils.js";
+import { toggleVisibility , doLogIn, doLogout, loadOrders , stopTimeControl, startUpdateTimePendingOrders, popUp, sendWhatsApp, update, loadLocations, orderChangeStatus } from "./utils.js";
 
 
 export let statusSection;
 
-const menuUserButton = document.querySelector('#menuUserButton')
-menuUserButton.addEventListener('click', function(){toggleVisibility(userMenu)})
+const floatButton = document.querySelector('#floatButton')
+floatButton.addEventListener('click', function(){toggleVisibility(userMenu)})
 
 export const btnLogIn = document.querySelector('#btnLogIn');
 btnLogIn.addEventListener('click', function(){ doLogIn() });
@@ -14,15 +14,15 @@ export const btnLogOut = document.querySelector('#btnLogOut');
 btnLogOut.addEventListener('click', function(){ doLogout()})
 
 
-const userMenu_pendingOrders= document.querySelector('#userMenu_pendingOrders');
-userMenu_pendingOrders.addEventListener('click', function(){    
+const userMenu_btn_pendingOrders= document.querySelector('#userMenu_btn_pendingOrders');
+userMenu_btn_pendingOrders.addEventListener('click', function(){    
     
     statusSection = 'pending-orders'
     btnUserMenuFunction('ingresado')
   
 })
-const userMenu_deliveryOrders= document.querySelector('#userMenu_deliveryOrders');
-userMenu_deliveryOrders.addEventListener('click', async function(){  
+const userMenu_btn_deliveryOrders= document.querySelector('#userMenu_btn_deliveryOrders');
+userMenu_btn_deliveryOrders.addEventListener('click', async function(){  
 
     statusSection = 'delivery-orders';
     btnUserMenuFunction('pronto_para_reparto'); 
@@ -31,11 +31,11 @@ userMenu_deliveryOrders.addEventListener('click', async function(){
 })
 
 async function btnUserMenuFunction(status){   
-    await loadPedidos(status,ordenesPendientesContainer,'Ordenes Pendientes:')
+    await loadOrders(status,sectionPendingOrders_ordersContainer,'Ordenes Pendientes:')
     if(sectionPendingOrders.classList.contains('inactive')){
         cartCard.classList.add('inactive');
         deliveryCard.classList.add('inactive');
-        inicioBtnContainer.classList.add('inactive');
+        inicio_BtnContainer.classList.add('inactive');
         sectionPendingOrders.classList.remove('inactive');
     }
     toggleVisibility(userMenu);      
@@ -44,73 +44,67 @@ async function btnUserMenuFunction(status){
 
 const userMenu_btnWhatsApp = document.querySelector('#userMenu_btnWhatsApp');
 userMenu_btnWhatsApp.addEventListener('click', function(){
-    popUp('Enviar WhatsApp a Setenta Trece?', sendWhatsApp,'94638229')
+    popUp('Enviar WhatsApp a Setenta Trece?', sendWhatsApp,'59894638229')
 })
 
 
 
 
-const btn_ordenesPendientes= document.querySelector('#inicioBtnPendingOrders');
-btn_ordenesPendientes.addEventListener('click',async function(){
+const inicio_btn_pendingOrders= document.querySelector('#inicio_btn_pendingOrders');
+inicio_btn_pendingOrders.addEventListener('click',async function(){
     statusSection = 'pending-orders';
-    await loadPedidos('ingresado',ordenesPendientesContainer,'Ordenes Pendientes:');
-    toggleVisibility(inicioBtnContainer);
+    await loadOrders('ingresado',sectionPendingOrders_ordersContainer,'Ordenes Pendientes:');
+    toggleVisibility(inicio_BtnContainer);
     toggleVisibility(sectionPendingOrders);    
 })
 
-const btn_ordenesParaReparto= document.querySelector('#inicioDeliveryOrders');
-btn_ordenesParaReparto.addEventListener('click', async function(){
+const inicio_btn_deliveryOrders= document.querySelector('#inicio_btn_deliveryOrders');
+inicio_btn_deliveryOrders.addEventListener('click', async function(){
     statusSection = 'delivery-orders';
-    await loadPedidos('pronto_para_reparto',ordenesPendientesContainer,'Ordenes prontas para reparto:')
-    toggleVisibility(inicioBtnContainer);
+    await loadOrders('pronto_para_reparto',sectionPendingOrders_ordersContainer,'Ordenes prontas para reparto:')
+    toggleVisibility(inicio_BtnContainer);
     toggleVisibility(sectionPendingOrders);
 });
 
 
-const inicioAllOrdersLocations = document.querySelector('#inicioAllOrdersLocations');
-inicioAllOrdersLocations.addEventListener('click', async function(){
+const inicio_btn_allOrdersLocations = document.querySelector('#inicio_btn_allOrdersLocations');
+inicio_btn_allOrdersLocations.addEventListener('click', async function(){
     statusSection = 'all-orders-locations';
-    await loadLocations("ingresado");
-    toggleVisibility(inicioBtnContainer);
+    await loadLocations("ingresado","pronto_para_reparto");
+    toggleVisibility(inicio_BtnContainer);
     toggleVisibility(sectionAllOrdersLocations);
 })
 
 
 
-const returnButtonAllOrdersLocations = document.querySelector('#returnButtonAllOrdersLocations');
-returnButtonAllOrdersLocations.addEventListener('click', function(){
+const sectionAllOrdersLocations_btn_return = document.querySelector('#sectionAllOrdersLocations_btn_return');
+sectionAllOrdersLocations_btn_return.addEventListener('click', function(){
     toggleVisibility(sectionAllOrdersLocations)
-    toggleVisibility(inicioBtnContainer);
+    toggleVisibility(inicio_BtnContainer);
 
 })
 
 
 
 
-const btn_ordenesEntregadas= document.querySelector('.navigator-button--yellow');
-btn_ordenesEntregadas.addEventListener('click', function(){
-   
-});
-
-
-const btn_ordenesPendientesVolver = document.querySelector('#btn_ordenesPendientesVolver');
-btn_ordenesPendientesVolver.addEventListener('click', function(){ 
+const sectionPendingOrders_btn_return = document.querySelector('#sectionPendingOrders_btn_return');
+sectionPendingOrders_btn_return.addEventListener('click', function(){ 
     toggleVisibility(sectionPendingOrders);    
-    toggleVisibility(inicioBtnContainer);
+    toggleVisibility(inicio_BtnContainer);
     stopTimeControl();
 });
 
-const cart_btnVolver = document.querySelector('#cart_btnVolver');
-cart_btnVolver.addEventListener('click',async function(){
+const cartCard_btn_return = document.querySelector('#cartCard_btn_return');
+cartCard_btn_return.addEventListener('click',async function(){
 
     switch (statusSection) {
         case "pending-orders" :            
-            await loadPedidos('ingresado',ordenesPendientesContainer,'Ordenes Pendientes:')
+            await loadOrders('ingresado',sectionPendingOrders_ordersContainer,'Ordenes Pendientes:')
             toggleVisibility(sectionPendingOrders);
             
             break;
             case "all-orders-locations":  
-            await loadLocations("ingresado");
+            await loadLocations("ingresado","pronto_para_reparto");
             toggleVisibility(sectionAllOrdersLocations);            
             
             break;
@@ -120,20 +114,31 @@ cart_btnVolver.addEventListener('click',async function(){
         
     })
     
-    const cartDeliveryInfo = document.querySelector('#cartDeliveryInfo');
-    cartDeliveryInfo.addEventListener('click', function(){
-        toggleVisibility(deliveryCard);
-        toggleVisibility(cartCard); 
-    })
+const cartCard_btn_deliveryData = document.querySelector('#cartCard_btn_deliveryData');
+cartCard_btn_deliveryData.addEventListener('click', function(){
+    toggleVisibility(deliveryCard);
+    toggleVisibility(cartCard); 
+})
     
-    const cartReadyForDeliveryBtn = document.querySelector('#cartReadyForDeliveryBtn')
-    cartReadyForDeliveryBtn.addEventListener('click', async function(){
-        popUp('quieres camiar el estado de esta orden a "pronto para reparto"?', orderChangeStatus, 'ventas', currentOrder , 'pronto_para_reparto')
+
+const cartCard_btn_ready = document.querySelector('#cartCard_btn_ready')
+cartCard_btn_ready.addEventListener('click', async function(){
+      
+        popUp(`Quieres cambiar el estado de esta orden a ${currentOrder.nextStatus}?`, orderChangeStatus, 'ventas', currentOrder , currentOrder.nextStatus)
+
+    })
+
+
+
+const cartCard_btn_cancel = document.querySelector('#cartCard_btn_cancel')
+cartCard_btn_cancel.addEventListener('click', async function(){
+      
+        popUp('Quieres cambiar el estado de esta orden a "Cancelado"?', orderChangeStatus, 'ventas', currentOrder , 'cancelado')
         
 })
 
-const optionsDeliveryInfo = document.querySelector('#optionsDeliveryInfo');
-optionsDeliveryInfo.addEventListener('click', function(){
+const sectionOptions_btn_deliveryData = document.querySelector('#sectionOptions_btn_deliveryData');
+sectionOptions_btn_deliveryData.addEventListener('click', function(){
     toggleVisibility(deliveryCard);
     toggleVisibility(sectionOptions); 
 })
@@ -141,18 +146,25 @@ optionsDeliveryInfo.addEventListener('click', function(){
 
 
 
-const options_btnVolver = document.querySelector('#options_btnVolver')
-options_btnVolver.addEventListener('click', function(){
+const sectionOptions_btn_return = document.querySelector('#sectionOptions_btn_return')
+sectionOptions_btn_return.addEventListener('click', function(){
     toggleVisibility(sectionOptions);
     toggleVisibility(cartCard);
 })
 
-const deliveryBtnReturn = document.querySelector('#deliveryBtnReturn')
-deliveryBtnReturn.addEventListener('click', async function(){
+const sectionOptions_btn_ready = document.querySelector('#sectionOptions_btn_ready')
+    sectionOptions_btn_ready.addEventListener('click', async function(){
+      
+        popUp(`Quieres cambiar el estado de esta orden a ${currentOrder.nextStatus}?`, orderChangeStatus, 'ventas', currentOrder , currentOrder.nextStatus)
+        
+})
+
+const deliveryCard_btn_return = document.querySelector('#deliveryCard_btn_return')
+deliveryCard_btn_return.addEventListener('click', async function(){
     switch (statusSection) {
+
         case 'pending-orders':
         toggleVisibility(cartCard);
-
         break;
         
         case 'all-orders-locations':
@@ -160,12 +172,9 @@ deliveryBtnReturn.addEventListener('click', async function(){
             
             break;
         case 'delivery-orders':
-           await loadPedidos('pronto_para_reparto',ordenesPendientesContainer,'Ordenes prontas para reparto:')
+           await loadOrders('pronto_para_reparto',sectionPendingOrders_ordersContainer,'Ordenes prontas para reparto:')
             toggleVisibility(sectionPendingOrders);
             
-            break;
-    
-        default:
             break;
     }
     
@@ -173,4 +182,8 @@ deliveryBtnReturn.addEventListener('click', async function(){
     toggleVisibility(deliveryCard);
 })
 
-const deliveryBtnDelivered = document.querySelector('#deliveryBtnDelivered')
+const deliveryCard_btn_ready = document.querySelector('#deliveryCard_btn_ready');
+deliveryCard_btn_ready.addEventListener('click',function(){
+    popUp(`Quieres cambiar el estado de esta orden a ${currentOrder.nextStatus}?`, orderChangeStatus, 'ventas', currentOrder , currentOrder.nextStatus)
+
+})

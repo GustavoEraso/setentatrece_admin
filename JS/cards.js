@@ -2,10 +2,10 @@ import { statusSection } from "./index.js";
 import { setMap } from "./map.js";
 import { toggleVisibility , stopTimeControl, startUpdateTimeChart , popUp , sendWhatsApp } from "./utils.js";
 
-const ordenesPendientesContainer = document.querySelector('#ordenesPendientesContainer');
+const sectionPendingOrders_ordersContainer = document.querySelector('#sectionPendingOrders_ordersContainer');
 
 
-export function loadOrders(section, array, title){
+export function renderOrders(section, array, title){
 
     section.innerText = "";
 
@@ -39,11 +39,6 @@ export function loadOrders(section, array, title){
                     break;
             
             }
-
-
-
-            
-            
             
         });
 
@@ -61,6 +56,12 @@ export function loadOrders(section, array, title){
 
         const listContainer = document.createElement('div');
         listContainer.classList.add('info-card__list-container');
+
+        const cartCard_amount = document.querySelector('#cartCard_amount')
+        cartCard_amount.innerText =`Monto total: $${order.amount}`;
+
+        const deliveryCard_amount = document.querySelector('#deliveryCard_amount');
+        deliveryCard_amount.innerText =`$${order.amount}`;
 
         const ul = document.createElement('ul');
                             let tortu = 0;
@@ -111,34 +112,34 @@ export function loadOrders(section, array, title){
 export let currentOrder ={};
 
 
-const cart_clientData = document.querySelector('#cart_clientData');
-const cart_textCliente = document.querySelector('#cartClientName');
-const cart_idClient = document.querySelector('#cartClientTel');
-cart_idClient.addEventListener('click', function(){
+const cartCard_clientDataMainContainer = document.querySelector('#cartCard_clientDataMainContainer');
+const cartCard_clientName = document.querySelector('#cartCard_clientName');
+const cartCard_clientPhone = document.querySelector('#cartCard_clientPhone');
+cartCard_clientPhone.addEventListener('click', function(){
     popUp(`Quiere enviar un WhatsApp a ${currentOrder.name}`,sendWhatsApp , `${currentOrder.prefix}${currentOrder.cel}`);
 })
-const cart_listItems = document.querySelector('#cart_listItems');
-const cart_delayedTime = document.querySelector('#cart_delayedTime');
+const cartCard_itemsSumary = document.querySelector('#cartCard_itemsSumary');
+const cartCard_delayedTime = document.querySelector('#cartCard_delayedTime');
 
-const options_clientData = document.querySelector('#options_clientData');
-const options_textClient = document.querySelector('#options_textClient');
-const options_idClient = document.querySelector('#options_idClient');
-options_idClient.addEventListener('click', function(){
+const sectionOptions_clientData = document.querySelector('#sectionOptions_clientData');
+const sectionOptions_clientName = document.querySelector('#sectionOptions_clientName');
+const sectionOptions_clientPhone = document.querySelector('#sectionOptions_clientPhone');
+sectionOptions_clientPhone.addEventListener('click', function(){
     popUp(`Quiere enviar un WhatsApp a ${currentOrder.name}`,sendWhatsApp ,`${currentOrder.prefix}${currentOrder.cel}`);
 })
-const optionsListItems = document.querySelector('#optionsListItems');
-const optionsDelayedTime = document.querySelector('#optionsDelayedTime');
+const sectionOptions_itemsSumary = document.querySelector('#sectionOptions_itemsSumary');
+const sectionOptions_delayedTime = document.querySelector('#sectionOptions_delayedTime');
 
-const options_itemsScrollX = document.querySelector('#options_itemsScrollX');
+const sectionOptions_itemsScrollX = document.querySelector('#sectionOptions_itemsScrollX');
 
-const delivery_clientData = document.querySelector('#delivery_clientData');
-const delivery_textClient = document.querySelector('#delivery_ClientName');
-const delivery_idClient = document.querySelector('#delivery_ClientTel');
-delivery_idClient.addEventListener('click', function(){
+const deliveryCard_clientData = document.querySelector('#deliveryCard_clientData');
+const deliveryCard_clientName = document.querySelector('#deliveryCard_clientName');
+const deliveryCard_clientPhone = document.querySelector('#deliveryCard_clientPhone');
+deliveryCard_clientPhone.addEventListener('click', function(){
     popUp(`Quiere enviar un WhatsApp a ${currentOrder.name}`,sendWhatsApp , `${currentOrder.prefix}${currentOrder.cel}`);
 })
-const delivery_listItems = document.querySelector('#delivery_listItems');
-const delivery_delayedTime = document.querySelector('#delivery_delayedTime');
+const deliveryCard_itemsSumary = document.querySelector('#deliveryCard_itemsSumary');
+const deliveryCard_delayedTime = document.querySelector('#deliveryCard_delayedTime');
 
 
 
@@ -148,25 +149,41 @@ export function loadChart(order){
     currentOrder= {};
     currentOrder = order;    
     setMap(order);
-    order.status == 'pronto_para_reparto'
-    ? deliveryBtnDelivered.classList.remove('inactive')
-    : deliveryBtnDelivered.classList.add('inactive');
+
+switch (order.status){
+    case 'ingresado':
+        currentOrder.nextStatus = 'pronto_para_reparto';
+        cartCard_btn_ready.innerText = 'Pronto para reparto';
+        deliveryCard_btn_ready.innerText = 'Pronto para reparto';
+        sectionOptions_btn_ready.innerText='Pronto para reparto';
+        
+        break
+    case 'pronto_para_reparto':
+        currentOrder.nextStatus = 'entregado'
+        cartCard_btn_ready.innerText = 'Entregado';
+        deliveryCard_btn_ready.innerText = 'Entregado';
+        sectionOptions_btn_ready.innerText='Entregado';
+        break
+}
+    // order.status == 'pronto_para_reparto'
+    // ? deliveryCard_btn_ready.classList.remove('inactive')
+    // : deliveryCard_btn_ready.classList.add('inactive');
 
     startUpdateTimeChart(order);  
         
 
-        cart_idClient.innerText= order.cel;
-        cart_textCliente.innerText= order.name;
-        options_idClient.innerText= order.cel;
-        options_textClient.innerText= order.name; 
-        delivery_idClient.innerText= order.cel;
-        delivery_textClient.innerText= order.name; 
+        cartCard_clientPhone.innerText= order.cel;
+        cartCard_clientName.innerText= order.name;
+        sectionOptions_clientPhone.innerText= order.cel;
+        sectionOptions_clientName.innerText= order.name; 
+        deliveryCard_clientPhone.innerText= order.cel;
+        deliveryCard_clientName.innerText= order.name; 
 
         
     
-        cart_listItems.innerText= "";
-        optionsListItems.innerText= "";
-        delivery_listItems.innerText= "";
+        cartCard_itemsSumary.innerText= "";
+        sectionOptions_itemsSumary.innerText= "";
+        deliveryCard_itemsSumary.innerText= "";
                             let tortu = 0;
                             let burger = 0;
                         for (const item of order.items) {
@@ -179,60 +196,60 @@ export function loadChart(order){
                         if(tortu){
                             const liTortu = document.createElement('li');
                             liTortu.innerText = `Tortugones: ${tortu}`
-                            cart_listItems.appendChild(liTortu.cloneNode(true));
-                            optionsListItems.appendChild(liTortu.cloneNode(true));
-                            delivery_listItems.appendChild(liTortu.cloneNode(true));
+                            cartCard_itemsSumary.appendChild(liTortu.cloneNode(true));
+                            sectionOptions_itemsSumary.appendChild(liTortu.cloneNode(true));
+                            deliveryCard_itemsSumary.appendChild(liTortu.cloneNode(true));
                         };
                         if(burger){
                             const liBurger = document.createElement('li');
                             liBurger.innerText = `Hamburguesas: ${burger}`
-                            cart_listItems.appendChild(liBurger.cloneNode(true));
-                            optionsListItems.appendChild(liBurger.cloneNode(true));
-                            delivery_listItems.appendChild(liBurger.cloneNode(true));
+                            cartCard_itemsSumary.appendChild(liBurger.cloneNode(true));
+                            sectionOptions_itemsSumary.appendChild(liBurger.cloneNode(true));
+                            deliveryCard_itemsSumary.appendChild(liBurger.cloneNode(true));
                         };
 
         const delayedTime = parseInt((Date.now() - order.date) / 60000);
-        cart_delayedTime.innerText =delayedTime;
-        optionsDelayedTime.innerText =delayedTime;
-        delivery_delayedTime.innerText =delayedTime;
+        cartCard_delayedTime.innerText =delayedTime;
+        sectionOptions_delayedTime.innerText =delayedTime;
+        deliveryCard_delayedTime.innerText =delayedTime;
 
        
         if(delayedTime < 20 ){
-            cart_clientData.classList.remove('background-orange')
-            options_clientData.classList.remove('background-orange')
-            delivery_clientData.classList.remove('background-orange')
-            cart_clientData.classList.remove('background-red')
-            options_clientData.classList.remove('background-red')
-            delivery_clientData.classList.remove('background-red')
-            cart_clientData.classList.add('background-white')
-            options_clientData.classList.add('background-white')
-            delivery_clientData.classList.add('background-white')
+            cartCard_clientDataMainContainer.classList.remove('background-orange')
+            sectionOptions_clientData.classList.remove('background-orange')
+            deliveryCard_clientData.classList.remove('background-orange')
+            cartCard_clientDataMainContainer.classList.remove('background-red')
+            sectionOptions_clientData.classList.remove('background-red')
+            deliveryCard_clientData.classList.remove('background-red')
+            cartCard_clientDataMainContainer.classList.add('background-white')
+            sectionOptions_clientData.classList.add('background-white')
+            deliveryCard_clientData.classList.add('background-white')
         }else if(delayedTime < 40 ){
           
-           cart_clientData.classList.remove('background-white')
-           options_clientData.classList.remove('background-white')
-           delivery_clientData.classList.remove('background-white')
-           cart_clientData.classList.remove('background-red')
-           options_clientData.classList.remove('background-red')
-           delivery_clientData.classList.remove('background-red')
-            cart_clientData.classList.add('background-orange')
-            options_clientData.classList.add('background-orange')
-            delivery_clientData.classList.add('background-orange')
+           cartCard_clientDataMainContainer.classList.remove('background-white')
+           sectionOptions_clientData.classList.remove('background-white')
+           deliveryCard_clientData.classList.remove('background-white')
+           cartCard_clientDataMainContainer.classList.remove('background-red')
+           sectionOptions_clientData.classList.remove('background-red')
+           deliveryCard_clientData.classList.remove('background-red')
+            cartCard_clientDataMainContainer.classList.add('background-orange')
+            sectionOptions_clientData.classList.add('background-orange')
+            deliveryCard_clientData.classList.add('background-orange')
           }else{
-            cart_clientData.classList.remove('background-white')
-            options_clientData.classList.remove('background-white')
-            delivery_clientData.classList.remove('background-white')
-            cart_clientData.classList.remove('background-orange')
-            options_clientData.classList.remove('background-orange')
-            delivery_clientData.classList.remove('background-orange')
-            cart_clientData.classList.add('background-red')            
-            options_clientData.classList.add('background-red')            
-            delivery_clientData.classList.add('background-red')            
+            cartCard_clientDataMainContainer.classList.remove('background-white')
+            sectionOptions_clientData.classList.remove('background-white')
+            deliveryCard_clientData.classList.remove('background-white')
+            cartCard_clientDataMainContainer.classList.remove('background-orange')
+            sectionOptions_clientData.classList.remove('background-orange')
+            deliveryCard_clientData.classList.remove('background-orange')
+            cartCard_clientDataMainContainer.classList.add('background-red')            
+            sectionOptions_clientData.classList.add('background-red')            
+            deliveryCard_clientData.classList.add('background-red')            
         };
 
-    const cartItemsContainer = document.querySelector('#cartItemsContainer');  
+    const cartCard_itemsContainer = document.querySelector('#cartCard_itemsContainer');  
     
-    cartItemsContainer.innerText= "";
+    cartCard_itemsContainer.innerText= "";
     
     for(let product of order.items){
 
@@ -242,7 +259,7 @@ export function loadChart(order){
         const internalContainer = document.createElement('div');
         internalContainer.classList.add('card-small-internalContainer');
         internalContainer.addEventListener('click',function(){
-            loadOptions(options_itemsScrollX);
+            loadOptions(sectionOptions_itemsScrollX);
             toggleVisibility(cartCard);
             toggleVisibility(sectionOptions);             
         });
@@ -263,7 +280,7 @@ export function loadChart(order){
         cardXs.appendChild(internalContainer);
 
 
-        cartItemsContainer.appendChild(cardXs);
+        cartCard_itemsContainer.appendChild(cardXs);
 
     }
 }
@@ -287,8 +304,8 @@ function loadOptions(section){
         const cardsContainer = document.createElement('ul');
         cardsContainer.classList.add('cart-items-options-container-cards');
         
-        armadorListaNegative(item, item.ingredientesFijos, cardsContainer);
-        armadorListaPositive(item, item.ingredientesOpcionales, cardsContainer);
+        createNegativeList(item, item.ingredientesFijos, cardsContainer);
+        createPositiveList(item, item.ingredientesOpcionales, cardsContainer);
                     
         
 
@@ -306,8 +323,8 @@ function loadOptions(section){
 
     }
 
-    function armadorListaPositive(item, lista, contenedor){
-        for (let gusto of lista) {
+    function createPositiveList(item, list, container){
+        for (let gusto of list) {
                         
             const liItem = document.createElement('li');
             const checkerContainer = document.createElement('div');
@@ -353,7 +370,7 @@ function loadOptions(section){
 
                         checkerContainer.append(labelPorcionA,labelPorcionB,labelPorcionC,labelPorcionD);
                         liItem.appendChild(checkerContainer);
-                        contenedor.appendChild(liItem); 
+                        container.appendChild(liItem); 
                     }
             } else{
 
@@ -371,7 +388,7 @@ function loadOptions(section){
 
                 liItem.appendChild(checkerContainer);
         
-                contenedor.appendChild(liItem); 
+                container.appendChild(liItem); 
                }
               }
        
@@ -381,8 +398,8 @@ function loadOptions(section){
     };
 
 
-    function armadorListaNegative(item, lista, contenedor){
-        for (let gusto of lista) {
+    function createNegativeList(item, list, container){
+        for (let gusto of list) {
                         
             const liItem = document.createElement('li');
             const checkerContainer = document.createElement('div');
@@ -430,7 +447,7 @@ function loadOptions(section){
 
                         checkerContainer.append(labelPorcionA,labelPorcionB,labelPorcionC,labelPorcionD);
                         liItem.appendChild(checkerContainer);
-                        contenedor.appendChild(liItem); 
+                        container.appendChild(liItem); 
                     }
             } else{
 
@@ -449,7 +466,7 @@ function loadOptions(section){
 
                     liItem.appendChild(checkerContainer);
             
-                    contenedor.appendChild(liItem); 
+                    container.appendChild(liItem); 
                 }
               }
        
