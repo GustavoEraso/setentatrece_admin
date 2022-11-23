@@ -348,6 +348,7 @@ header img {
 
 
 .info-card{
+    position: relative;
     width: 100%;
     height: auto;
     min-height: 50px;
@@ -358,11 +359,20 @@ header img {
     border-radius: 2px;
     box-shadow: 0 0 5px var(--black);
     font-size: 1.8rem;
+    justify-content: space-between;
 }
 .info-card__data-container{
     width: 80%;
     display: flex;
     flex-wrap: wrap;
+}
+
+.info-card__data-container--ended-order{
+    width: 60%;
+}
+
+.info-card__amount{
+    font-size: 3rem;
 }
 
 .info-card__client-name{
@@ -383,6 +393,21 @@ header img {
 .info-card__list-container{
     width: 80%;
 
+}
+
+.info-card__status{
+    position:absolute;
+    background-color: var(--red);
+    opacity: 0.7;
+    display: inline-block;
+    font-size: 2.5rem;
+    transform: rotate(-3deg) translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    color: var(--white);
+    border: 2px solid var(--white);
+    border-radius: 5px;
+    padding: 0 3px;
 }
 
 .info-card__time-container{
@@ -655,6 +680,123 @@ header img {
     align-items: center;
     justify-content: center;
 }
+
+
+.section-ended-orders{
+    /* background: var(--white); */
+    display: grid;
+    grid-template-rows: 60px auto 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    justify-items: center;
+    opacity: 1;
+    visibility: visible;
+    transition: var(--animationTime) opacity, var(--animationTime) visibility;    
+
+}
+
+.section-ended-orders__buttons-container{
+    grid-column: 1 / 5;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+}
+
+.section-ended-orders__buttons-container button {
+    height: 50px;
+    width: 100%;
+}
+
+.ended-orders__scroll-container{    
+    width: 100%;
+    grid-column: 1 / 5;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    overscroll-behavior-y: contain;
+    scroll-snap-type: y proximity;   
+
+}
+
+
+.ended-orders__items-container{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    padding: 5px;
+    /* background-color: var(--white); */
+   
+}
+
+.section-ended-orders__orders-container{
+    width: 100%;
+    height: 100%;
+    grid-column: 1 / 5;
+    
+}
+
+.resume-card{
+    width: 95%;
+    height: max-content;  
+    margin: 15px;
+    grid-column: 1 / 5;   
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;   
+    box-shadow: 0 0 5px var(--black);
+    padding: 5px;
+    /* background-color: var(--white); */
+    gap: 5px;
+}
+
+.resume-card__internal-container{
+    width: 100%;
+    height: 100% ;
+    grid-column: span 2;
+    /* background: var(--gradient-black-to-orange); */
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 5px;
+    
+}
+
+.resume-card__internal-container div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 2rem;
+    text-align: center;
+    line-height: 2.5rem;   
+    box-shadow: 0 0 2px var(--black);
+    border-radius: 5px;
+    background-color: var(--white);
+}
+
+
+.resume-card__value-text{
+    font-size: 3rem;   
+}
+
+small{
+    font-size: 1rem;
+}
+
+.resume-card__internal-container section{
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 5px;
+}
+
+
+
 
 .section-popUp{
     position: absolute;

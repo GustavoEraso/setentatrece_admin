@@ -4,6 +4,12 @@ import { toggleVisibility , stopTimeControl, startUpdateTimeChart , popUp , send
 
 const sectionPendingOrders_ordersContainer = document.querySelector('#sectionPendingOrders_ordersContainer');
 
+const endedOrders_ordersDelivered = document.querySelector('#endedOrders_ordersDelivered');
+const endedOrders_amount = document.querySelector('#endedOrders_amount');
+const endedOrders_averageDelay = document.querySelector('#endedOrders_averageDelay');
+const endedOrders_minDelay = document.querySelector('#endedOrders_minDelay');
+const endedOrders_maxDelay = document.querySelector('#endedOrders_maxDelay');
+
 
 export function renderOrders(section, array, title){
 
@@ -109,6 +115,150 @@ export function renderOrders(section, array, title){
     }
 }
 
+
+export function renderEndedOrders(section, array, title){
+
+    section.innerText = "";
+
+    const upperTitle = document.createElement('h2');
+    upperTitle.classList.add('upper-title-cards-cardXs')
+    upperTitle.innerText = title.toUpperCase();
+    section.appendChild(upperTitle);
+    let delayList= [];
+    let amountList= [];
+    
+    for(let order of array){    
+        
+        const orderDelay = (order.history.at(-1).date - order.date)
+        delayList.push(orderDelay);
+        if(order.history.at(-1).status !== 'cancelado'){
+            amountList.push(order.amount);
+        }
+
+        const cardXs = document.createElement('article');
+        cardXs.classList.add('info-card');
+        if( orderDelay < 1200000 ){
+            cardXs.classList.add('background-white')
+        }else if(orderDelay < 2400000 ){
+            cardXs.classList.add('background-orange')
+        }else{
+            cardXs.classList.add('background-red')            
+        };
+        cardXs.setAttribute('id',`cardOrderSmall${array.indexOf(order)}`);
+
+        cardXs.addEventListener('click',function(){
+            loadChart(order);
+            toggleVisibility(sectionPendingOrders);
+            switch (statusSection) {
+                case 'pending-orders':
+                    toggleVisibility(cartCard);
+                    break;
+                case 'delivery-orders':
+                    toggleVisibility(deliveryCard);
+                    break;
+            
+            }
+            
+        });
+
+        const orderSmallData = document.createElement('div');
+        orderSmallData.classList.add('info-card__data-container', 'info-card__data-container--ended-order');
+
+        const orderStatus = document.createElement('span');
+        orderStatus.classList.add('info-card__status');
+        orderStatus.innerText = order.history.at(-1).status.toUpperCase()
+
+
+        const textCliente = document.createElement('div');
+        textCliente.classList.add('info-card__client-name');
+        textCliente.innerText = order.name;
+
+        const idClient = document.createElement('span');
+        idClient.classList.add('info-card__client-cel');
+        idClient.innerText = order.cel;
+
+
+        const listContainer = document.createElement('div');
+        listContainer.classList.add('info-card__list-container');
+
+        const cartCard_amount = document.querySelector('#cartCard_amount')
+        cartCard_amount.innerText =`Monto total: $${order.amount}`;
+
+        const deliveryCard_amount = document.querySelector('#deliveryCard_amount');
+        deliveryCard_amount.innerText =`$${order.amount}`;
+
+        const ul = document.createElement('ul');
+                            let tortu = 0;
+                            let burger = 0;
+                        for (const item of order.items) {
+                            if(item.familia =='Hamburguesas'){
+                                burger++;
+                            }else if(item.familia =='Tortugones'){
+                                tortu++;
+                            }
+                        }
+                        if(tortu){
+                            const liTortu = document.createElement('li');
+                            liTortu.innerText = `Tortugones: ${tortu}`
+                            ul.appendChild(liTortu);
+                        }
+                        if(burger){
+                            const liBurger = document.createElement('li');
+                            liBurger.innerText = `Hamburguesas: ${burger}`
+                            ul.appendChild(liBurger);
+                        };
+        
+        
+        const amountContainer = document.createElement('div');
+        amountContainer.classList.add('info-card__amount-container');
+                
+        const amount = document.createElement('span');
+        amount.classList.add('info-card__amount');
+        amount.innerText = `$ ${order.amount}`;
+
+
+
+                    
+        
+        const timeContainer = document.createElement('div');
+        timeContainer.classList.add('info-card__time-container');
+
+        const delayedTime = document.createElement('span');
+        delayedTime.classList.add('info-card__delayed-time');
+        delayedTime.innerText = parseInt(orderDelay / 60000);
+
+        const spanMin = document.createElement('span');
+        spanMin.innerText = 'min'
+
+        listContainer.appendChild(ul);
+        timeContainer.appendChild(delayedTime);
+        timeContainer.appendChild(spanMin);
+        
+        amountContainer.appendChild(amount);
+        
+        orderSmallData.appendChild(textCliente);
+        orderSmallData.appendChild(idClient);
+        orderSmallData.appendChild(listContainer);
+        
+        cardXs.append(orderSmallData,amountContainer,timeContainer);
+        
+        if(order.history.at(-1).status == 'cancelado'){
+            cardXs.appendChild(orderStatus);
+        }
+        
+        section.appendChild(cardXs);
+    }
+
+    endedOrders_ordersDelivered.innerText = amountList.length;
+    endedOrders_amount.innerText = amountList.reduce((a, b) => a + b, 0);
+    endedOrders_averageDelay.innerText = parseInt((delayList.reduce((a, b) => a + b, 0) / delayList.length)/ 60000) // canceled orders included.
+    endedOrders_minDelay.innerText = parseInt(Math.min(...delayList)/ 60000);
+    endedOrders_maxDelay.innerText = parseInt(Math.max(...delayList)/ 60000);
+
+}
+
+
+
 export let currentOrder ={};
 
 
@@ -141,6 +291,7 @@ deliveryCard_clientPhone.addEventListener('click', function(){
 const deliveryCard_itemsSumary = document.querySelector('#deliveryCard_itemsSumary');
 const deliveryCard_delayedTime = document.querySelector('#deliveryCard_delayedTime');
 
+const endedOrders_itemsContainer = document.querySelector('#endedOrders_itemsContainer');
 
 
 
@@ -164,10 +315,7 @@ switch (order.status){
         deliveryCard_btn_ready.innerText = 'Entregado';
         sectionOptions_btn_ready.innerText='Entregado';
         break
-}
-    // order.status == 'pronto_para_reparto'
-    // ? deliveryCard_btn_ready.classList.remove('inactive')
-    // : deliveryCard_btn_ready.classList.add('inactive');
+    }
 
     startUpdateTimeChart(order);  
         

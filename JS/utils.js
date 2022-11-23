@@ -1,6 +1,6 @@
 import { login, logout } from "./auth.js";
 import { btnLogIn , btnLogOut, statusSection  } from "./index.js"
-import { renderOrders } from "./cards.js";
+import { renderOrders , renderEndedOrders } from "./cards.js";
 import { addAllOrdersToMap } from "./map.js";
 
 
@@ -20,6 +20,7 @@ const cartCard = document.querySelector('#cartCard');
 const sectionOptions = document.querySelector('#sectionOptions');
 const deliveryCard =document.querySelector('#deliveryCard');
 const sectionAllOrdersLocations= document.querySelector('#sectionAllOrdersLocations');
+const sectionEndedOrders = document.querySelector('#sectionEndedOrders');
 const sectionPopUp = document.querySelector('#sectionPopUp');
 
 
@@ -81,16 +82,32 @@ export async function init() {
     let orders = [];    
   
     try {
-      const response = await getItems(status);
+      const response = await getItems("ventas", status);
       orders = [...response];
 
       orders.sort((a,b)=> a.date - b.date); 
   
       ordersList = orders;
-
   
        renderOrders(section, orders, title);
        startUpdateTimePendingOrders();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  export async function loadEndedOrders(section,title,...status) {
+    let orders = [];    
+  
+    try {
+      const response = await getItems("ventas",...status);
+      orders = [...response];
+
+      orders.sort((a,b)=> a.date - b.date); 
+  
+      // ordersList = orders;
+  
+       renderEndedOrders(section, orders, title);       
     } catch (error) {
       console.error(error);
     }
@@ -107,7 +124,7 @@ export async function init() {
     let orders = [];
   
     try {   
-      const response = await getItems(...status);
+      const response = await getItems("ventas",...status);
       orders = [...response];    
 
       orders.sort((a,b)=> a.date - b.date); 
@@ -151,7 +168,7 @@ export async function init() {
 
 
 
-  async function getItems(...statusList) {
+  async function getItems(colection,...statusList) {
 
     let items = [];
 
@@ -164,7 +181,7 @@ export async function init() {
       
       try {
         const response = await db
-          .collection("ventas")
+          .collection(colection)
           .where("status", "==", status)
           .get();
     
@@ -210,6 +227,79 @@ export async function init() {
       throw new Error(error);
     }
   }
+
+
+export async function processOrders(){
+  
+  try{
+    //TRAIGO LAS ORDENES ENTREGADAS Y CANCELADAS, LE AGREGO EL NUEVO ESTADO AL HISTORIAL DE ESTADOS
+  const orders = await getItems("ventas","entregado","cancelado");
+   orders.map((order)=>{
+      order.completed = true;
+      order.history.push({      
+      status: "procesado",
+      date: Number(Date.now()),
+      user : {
+        name:currentUser.displayName,
+        id: currentUser.uid
+      }
+    })    
+  })
+
+  // AGREGO LAS ORDENES CON EL NUEVO STATUS A LA COLECCION ordenes_procesadas
+
+  orders.map(async(order)=>{
+    await insert('ordenes_procesadas', order);
+  })
+
+  console.log(orders)
+
+  // ELIMINO LAS ORDENES DE COLECCION ventas
+
+  await deleteOrders('ventas',...orders);  
+
+  }catch (error){
+
+    throw new Error(error);
+  } 
+
+}
+
+async function deleteOrders(collection,...orders){
+
+  let docId = [];
+  for (const order of orders) {
+    const doc = await db.collection(collection).where("id", "==", order.id).get();
+        doc.forEach((i) => {
+        docId.push(i.id);
+        });    
+  }
+      for (const doc of docId) {
+        db.collection(collection).doc(doc).delete().then(() => {
+           console.log("Document successfully deleted!");
+        }).catch((error) => {
+        console.error("Error removing document: ", error);
+        
+        })
+      }   
+}
+
+
+
+
+async function insert(collection,  item) {
+  try {
+    console.log('insert')
+    const response = await db.collection(collection).add(item);
+    return response;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+
+
+
 
  export  async function orderChangeStatus(colecction,order,newStatus){
     try{
@@ -344,8 +434,7 @@ export async function init() {
   }
 
   
-  function updateAllOrdersMap(status){
-   
+  function updateAllOrdersMap(status){   
     loadLocations(status)
   }
   

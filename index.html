@@ -53,7 +53,7 @@
             <button class="navigator-button navigator-button--red" id="inicio_btn_pendingOrders" >ORDENES INGRESADAS</button>
             <button class="navigator-button navigator-button--yellow" id="inicio_btn_deliveryOrders">ORDENES PARA REPARTO</button>
             <button class="navigator-button navigator-button--blue" id="inicio_btn_allOrdersLocations">VER MAPA </button>
-            <button class="navigator-button navigator-button--green">ORDENES FINALIZADAS</button>
+            <button class="navigator-button navigator-button--green" id="inicio_btn_endedOrders">ORDENES FINALIZADAS</button>
         </section>
 
         <section class="section-pending-orders inactive" id="sectionPendingOrders">
@@ -189,6 +189,54 @@
                                   
             <button class="primary-button" id="sectionAllOrdersLocations_btn_return">volver</button> 
              
+
+        </section>
+
+        <section class="section-ended-orders inactive" id="sectionEndedOrders">
+
+            <div class="section-ended-orders__buttons-container" id="popUpBtnContainer">
+                <button class="primary-button " id="endedOrders_btn_return">Volver</button>     
+                <button class="primary-button " id="">Cancelar accion</button>     
+                <button class="primary-button " id="endedOrders_btn_process">Procesar Ordenes</button>
+            </div>
+
+            <section class="resume-card">
+                <div class= "resume-card__internal-container">
+                    <div>
+                        <span>Pedidos entregados</span>
+                        <span><span class="resume-card__value-text" id="endedOrders_ordersDelivered"></span><small>pedidos</small></span>
+                    </div>
+                    <div>
+                        <span>Importe</span>
+                        <span class="resume-card__value-text" id="endedOrders_amount"></span>
+                    </div>
+                </div>
+                
+                <div class= "resume-card__internal-container">
+                    <div>
+                        <span>Demora promedio</span>
+                        <span><span class="resume-card__value-text" id="endedOrders_averageDelay"></span><small>min</small></span>
+                    </div>
+                    <section>
+                        <div>
+                            <span>Min</span>
+                            <span><span class="resume-card__value-text" id="endedOrders_minDelay"></span><small>min</small></span>
+                        </div>
+                        <div>
+                            <span>Max</span>
+                            <span><span class="resume-card__value-text" id="endedOrders_maxDelay"></span><small>min</small></span>
+                    </section>
+                </div>
+            </section>
+            <div class="ended-orders__scroll-container">
+                <div class="ended-orders__items-container" id="endedOrders_itemsContainer">
+
+                   <!-- SE INSERTANN LAS ORDENES DINAMICAMENTE DESDE JS -->                                                                                             
+                    
+                </div>                
+            </div> 
+           
+
 
         </section>
 

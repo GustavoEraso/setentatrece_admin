@@ -1,5 +1,5 @@
 import { currentOrder } from "./cards.js";
-import { toggleVisibility , doLogIn, doLogout, loadOrders , stopTimeControl, startUpdateTimePendingOrders, popUp, sendWhatsApp, update, loadLocations, orderChangeStatus } from "./utils.js";
+import { toggleVisibility , doLogIn, doLogout, loadOrders , loadEndedOrders , stopTimeControl, startUpdateTimePendingOrders, popUp, sendWhatsApp, update, loadLocations, orderChangeStatus , processOrders } from "./utils.js";
 
 
 export let statusSection;
@@ -74,6 +74,15 @@ inicio_btn_allOrdersLocations.addEventListener('click', async function(){
     toggleVisibility(inicio_BtnContainer);
     toggleVisibility(sectionAllOrdersLocations);
 })
+
+const inicio_btn_endedOrders = document.querySelector('#inicio_btn_endedOrders');
+inicio_btn_endedOrders.addEventListener('click', async function(){
+    statusSection = 'ended-orders';
+    await loadEndedOrders(endedOrders_itemsContainer,'Ordenes finalizdas:', 'entregado', 'cancelado')
+    toggleVisibility(inicio_BtnContainer);
+    toggleVisibility(sectionEndedOrders);
+})
+
 
 
 
@@ -186,4 +195,18 @@ const deliveryCard_btn_ready = document.querySelector('#deliveryCard_btn_ready')
 deliveryCard_btn_ready.addEventListener('click',function(){
     popUp(`Quieres cambiar el estado de esta orden a ${currentOrder.nextStatus}?`, orderChangeStatus, 'ventas', currentOrder , currentOrder.nextStatus)
 
+})
+
+
+const endedOrders_btn_return = document.querySelector('#endedOrders_btn_return');
+endedOrders_btn_return.addEventListener('click', function(){
+    toggleVisibility(sectionEndedOrders);    
+    toggleVisibility(inicio_BtnContainer);
+})
+
+const endedOrders_btn_process = document.querySelector('#endedOrders_btn_process');
+endedOrders_btn_process.addEventListener('click', async function(){
+    await processOrders();
+    toggleVisibility(sectionEndedOrders);    
+    toggleVisibility(inicio_BtnContainer);
 })
