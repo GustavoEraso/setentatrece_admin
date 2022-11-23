@@ -206,7 +206,7 @@ endedOrders_btn_return.addEventListener('click', function(){
 
 const endedOrders_btn_process = document.querySelector('#endedOrders_btn_process');
 endedOrders_btn_process.addEventListener('click', async function(){
-    await processOrders();
-    toggleVisibility(sectionEndedOrders);    
-    toggleVisibility(inicio_BtnContainer);
+
+    popUp(`Quieres procesar todas las ordenes finalizadas?`, processOrders)
+    
 })

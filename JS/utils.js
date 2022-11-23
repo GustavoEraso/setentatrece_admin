@@ -23,6 +23,8 @@ const sectionAllOrdersLocations= document.querySelector('#sectionAllOrdersLocati
 const sectionEndedOrders = document.querySelector('#sectionEndedOrders');
 const sectionPopUp = document.querySelector('#sectionPopUp');
 
+const sectionAwait = document.querySelector('#sectionAwait')
+
 
 
 document.addEventListener("mouseup", function(event) {
@@ -105,9 +107,7 @@ export async function init() {
 
       orders.sort((a,b)=> a.date - b.date); 
   
-      // ordersList = orders;
-  
-       renderEndedOrders(section, orders, title);       
+      renderEndedOrders(section, orders, title);       
     } catch (error) {
       console.error(error);
     }
@@ -169,6 +169,7 @@ export async function init() {
 
 
   async function getItems(colection,...statusList) {
+    sectionAwait.classList.remove('inactive')
 
     let items = [];
 
@@ -193,11 +194,13 @@ export async function init() {
         throw new Error(error);
       }
     }
+    sectionAwait.classList.add('inactive')
     return items;
   };
 
 
   export async function update( collection, order, newStatus) {
+    sectionAwait.classList.remove('inactive')
     
     try {
       let docId;
@@ -226,10 +229,13 @@ export async function init() {
     } catch (error) {
       throw new Error(error);
     }
+    sectionAwait.classList.add('inactive')
   }
 
 
 export async function processOrders(){
+
+  sectionAwait.classList.remove('inactive')
   
   try{
     //TRAIGO LAS ORDENES ENTREGADAS Y CANCELADAS, LE AGREGO EL NUEVO ESTADO AL HISTORIAL DE ESTADOS
@@ -258,10 +264,15 @@ export async function processOrders(){
 
   await deleteOrders('ventas',...orders);  
 
+  toggleVisibility(sectionEndedOrders)
+  toggleVisibility(inicio_BtnContainer)
+
   }catch (error){
 
     throw new Error(error);
   } 
+
+  sectionAwait.classList.add('inactive')
 
 }
 
@@ -312,7 +323,7 @@ async function insert(collection,  item) {
               
               break;
           case "delivery-orders":    
-              await loadLocations("pronto_para_reparto");
+              await loadOrders('pronto_para_reparto',sectionPendingOrders_ordersContainer,'Ordenes prontas para reparto:')
               toggleVisibility(sectionPendingOrders);
               break;
                        
