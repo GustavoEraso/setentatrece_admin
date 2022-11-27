@@ -22,6 +22,7 @@ function icon ({
         })
 }
 
+let centralIcon = new icon({iconUrl: "../assets/leaflet/central-icon.png" });
 
 let greenIcon = new icon({iconUrl: "../assets/leaflet/green-icon.png" });
 
@@ -57,6 +58,8 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(allOrdersMap);
 
+let centralMarker = L.marker([-34.9087642861, -54.9581809946],{icon: centralIcon}).addTo(allOrdersMap);
+
 
 
 
@@ -74,6 +77,8 @@ export function addAllOrdersToMap (orders){
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(allOrdersMap);  
+
+let centralMarker = L.marker([-34.9087642861, -54.9581809946],{icon: centralIcon}).addTo(allOrdersMap);
     
 
 
@@ -129,7 +134,7 @@ export function addAllOrdersToMap (orders){
         
     };
 
-    allOrdersMap.fitBounds([
+    allOrdersMap.fitBounds([[-34.9087642861, -54.9581809946],
         ...orders.map(order=>[
             order.location.manualLocation.lat || order.location.sistemLocation.lat, 
             order.location.manualLocation.lng || order.location.sistemLocation.lng

@@ -81,6 +81,7 @@ export async function init() {
   let ordersList = [];
 
   export async function loadOrders(status,section,title) {
+    sectionAwait.classList.remove('inactive')
     let orders = [];    
   
     try {
@@ -93,12 +94,15 @@ export async function init() {
   
        renderOrders(section, orders, title);
        startUpdateTimePendingOrders();
+       sectionAwait.classList.add('inactive')
     } catch (error) {
       console.error(error);
     }
   }
 
+
   export async function loadEndedOrders(section,title,...status) {
+    sectionAwait.classList.remove('inactive')
     let orders = [];    
   
     try {
@@ -107,11 +111,37 @@ export async function init() {
 
       orders.sort((a,b)=> a.date - b.date); 
   
-      renderEndedOrders(section, orders, title);       
+      renderEndedOrders(section, orders, title);   
+      sectionAwait.classList.add('inactive')    
     } catch (error) {
       console.error(error);
     }
   }
+
+  
+
+  function isDisfferent(array1 , array2){
+    let result = false     
+
+    array1.map((item)=>{
+      let order = array2.find(({id})=> id === item.id) || {status:false};
+      if(item.status !== order.status){
+        result = true
+      }       
+    })
+    array2.map((item)=>{
+      let order = array1.find(({id})=> id === item.id) || {status:false};
+      if(item.status !== order.status){
+        result = true
+      }       
+    })
+    result 
+    ?console.log('son distintos')
+    :console.log('son iguales')
+
+    return result;
+  }
+
 
 
 
@@ -119,7 +149,7 @@ export async function init() {
 
  let ordersOnMap = [];
 
-  export async function loadLocations(...status) {
+  export async function loadLocations(...status) {     
    
     let orders = [];
   
@@ -127,34 +157,17 @@ export async function init() {
       const response = await getItems("ventas",...status);
       orders = [...response];    
 
-      orders.sort((a,b)=> a.date - b.date); 
+      orders.sort((a,b)=> a.date - b.date);     
       
-      let areDifferent = false
-
-      let oldOrders = [];
-      ordersOnMap.map((order)=> oldOrders.push(order.id));
-
-      let newOrders = [];
-      orders.map((order)=> newOrders.push(order.id));
-
       
-      newOrders.map((order)=>{
-        if(!oldOrders.includes(order)){         
-          areDifferent = true;} 
-      })     
-      
-      oldOrders.map((order)=>{
-        if(!newOrders.includes(order)){         
-          areDifferent = true;} 
-      })   
-      
-      if(areDifferent){
+      if(isDisfferent(ordersOnMap,orders)){
         ordersOnMap = orders;
         addAllOrdersToMap(orders);
-        startUpdateAllOrdersMap(status)      
-        
+        startUpdateAllOrdersMap(status) 
       }
-     
+
+      sectionAwait.classList.add('inactive')
+      
       
     } catch (error) {
       console.error(error);
@@ -165,16 +178,12 @@ export async function init() {
 
 
 
-
-
-
   async function getItems(colection,...statusList) {
-    sectionAwait.classList.remove('inactive')
+   
 
     let items = [];
 
-    statusList = statusList.flat()
-   
+    statusList = statusList.flat()  
 
     
     for (const status of statusList) {
@@ -194,12 +203,13 @@ export async function init() {
         throw new Error(error);
       }
     }
-    sectionAwait.classList.add('inactive')
+   
     return items;
   };
 
 
   export async function update( collection, order, newStatus) {
+    
     sectionAwait.classList.remove('inactive')
     
     try {
@@ -355,11 +365,10 @@ async function insert(collection,  item) {
     
   }
 
-  export function startUpdateAllOrdersMap(...status){
-   
+  export function startUpdateAllOrdersMap(...status){   
     
     stopTimeControl();     
-      intervalId = setInterval(updateAllOrdersMap, 30000, ...status);
+      intervalId = setInterval(updateAllOrdersMap, 10000, ...status);
     
   }
 

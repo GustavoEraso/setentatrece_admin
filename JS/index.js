@@ -70,6 +70,7 @@ inicio_btn_deliveryOrders.addEventListener('click', async function(){
 const inicio_btn_allOrdersLocations = document.querySelector('#inicio_btn_allOrdersLocations');
 inicio_btn_allOrdersLocations.addEventListener('click', async function(){
     statusSection = 'all-orders-locations';
+    sectionAwait.classList.remove('inactive')
     await loadLocations("ingresado","pronto_para_reparto");
     toggleVisibility(inicio_BtnContainer);
     toggleVisibility(sectionAllOrdersLocations);
@@ -105,16 +106,24 @@ sectionPendingOrders_btn_return.addEventListener('click', function(){
 
 const cartCard_btn_return = document.querySelector('#cartCard_btn_return');
 cartCard_btn_return.addEventListener('click',async function(){
-
+    
+    sectionAwait.classList.remove('inactive')  
+    
     switch (statusSection) {
-        case "pending-orders" :            
-            await loadOrders('ingresado',sectionPendingOrders_ordersContainer,'Ordenes Pendientes:')
-            toggleVisibility(sectionPendingOrders);
-            
-            break;
-            case "all-orders-locations":  
+        case "pending-orders" :   
+        await loadOrders('ingresado',sectionPendingOrders_ordersContainer,'Ordenes Pendientes:')
+        toggleVisibility(sectionPendingOrders);
+        
+        break;
+        case "all-orders-locations":  
             await loadLocations("ingresado","pronto_para_reparto");
             toggleVisibility(sectionAllOrdersLocations);            
+            
+            break;
+
+        case "ended-orders":  
+        await loadEndedOrders(endedOrders_itemsContainer,'Ordenes finalizdas:', 'entregado', 'cancelado');
+            toggleVisibility(sectionEndedOrders);            
             
             break;
             
@@ -185,7 +194,12 @@ deliveryCard_btn_return.addEventListener('click', async function(){
             toggleVisibility(sectionPendingOrders);
             
             break;
-    }
+
+        case 'ended-orders':
+            toggleVisibility(cartCard);
+            
+            break;
+}
     
     
     toggleVisibility(deliveryCard);

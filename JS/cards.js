@@ -148,13 +148,18 @@ export function renderEndedOrders(section, array, title){
 
         cardXs.addEventListener('click',function(){
             loadChart(order);
-            toggleVisibility(sectionPendingOrders);
             switch (statusSection) {
                 case 'pending-orders':
-                    toggleVisibility(cartCard);
+                            toggleVisibility(sectionPendingOrders);
+                            toggleVisibility(cartCard);
                     break;
-                case 'delivery-orders':
-                    toggleVisibility(deliveryCard);
+                    case 'delivery-orders':
+                            toggleVisibility(sectionPendingOrders);
+                            toggleVisibility(deliveryCard);
+                    break;
+                case 'ended-orders':
+                            toggleVisibility(sectionEndedOrders)
+                            toggleVisibility(cartCard);
                     break;
             
             }
