@@ -18,26 +18,94 @@ const userMenu_btn_pendingOrders= document.querySelector('#userMenu_btn_pendingO
 userMenu_btn_pendingOrders.addEventListener('click', function(){    
     
     statusSection = 'pending-orders'
-    btnUserMenuFunction('ingresado')
+    btnUserMenuFunction('pending-orders')
   
 })
 const userMenu_btn_deliveryOrders= document.querySelector('#userMenu_btn_deliveryOrders');
 userMenu_btn_deliveryOrders.addEventListener('click', async function(){  
 
     statusSection = 'delivery-orders';
-    btnUserMenuFunction('pronto_para_reparto'); 
-
+    btnUserMenuFunction('delivery-orders');
     
 })
 
-async function btnUserMenuFunction(status){   
-    await loadOrders(status,sectionPendingOrders_ordersContainer,'Ordenes Pendientes:')
-    if(sectionPendingOrders.classList.contains('inactive')){
-        cartCard.classList.add('inactive');
-        deliveryCard.classList.add('inactive');
-        inicio_BtnContainer.classList.add('inactive');
-        sectionPendingOrders.classList.remove('inactive');
-    }
+const userMenu_btn_allOrdersLocations= document.querySelector('#userMenu_btn_allOrdersLocations');
+userMenu_btn_allOrdersLocations.addEventListener('click', async function(){  
+
+    statusSection = 'all-orders-locations';
+    btnUserMenuFunction('all-orders-locations');
+    
+})
+
+const userMenu_btn_endedOrders= document.querySelector('#userMenu_btn_endedOrders');
+userMenu_btn_endedOrders.addEventListener('click', async function(){  
+
+    statusSection = 'ended-orders';
+    btnUserMenuFunction('ended-orders');
+    
+})
+
+async function btnUserMenuFunction(section){   
+   
+  switch (section) {
+    case 'pending-orders':
+        sectionAwait.classList.remove('inactive')        
+        await loadOrders('ingresado',sectionPendingOrders_ordersContainer,'Ordenes Pendientes:');
+        if(sectionPendingOrders.classList.contains('inactive')){
+            inicio_BtnContainer.classList.add('inactive');
+            sectionAllOrdersLocations.classList.add('inactive');
+            sectionEndedOrders.classList.add('inactive');
+            cartCard.classList.add('inactive');
+            sectionOptions.classList.add('inactive');
+            deliveryCard.classList.add('inactive');
+            sectionPendingOrders.classList.remove('inactive');
+        }        
+        break;
+    case 'delivery-orders':
+        sectionAwait.classList.remove('inactive')
+        await loadOrders('pronto_para_reparto',sectionPendingOrders_ordersContainer,'Ordenes prontas para reparto:')
+        if(sectionPendingOrders.classList.contains('inactive')){
+            inicio_BtnContainer.classList.add('inactive');
+            sectionAllOrdersLocations.classList.add('inactive');
+            sectionEndedOrders.classList.add('inactive');
+            cartCard.classList.add('inactive');
+            sectionOptions.classList.add('inactive');
+            deliveryCard.classList.add('inactive');
+            sectionPendingOrders.classList.remove('inactive');
+        }        
+        break;
+    case 'all-orders-locations':
+        sectionAwait.classList.remove('inactive')
+        await loadLocations("ingresado","pronto_para_reparto");       
+        if(sectionAllOrdersLocations.classList.contains('inactive')){
+            inicio_BtnContainer.classList.add('inactive');
+            sectionEndedOrders.classList.add('inactive');
+            cartCard.classList.add('inactive');
+            sectionOptions.classList.add('inactive');
+            deliveryCard.classList.add('inactive');
+            sectionPendingOrders.classList.add('inactive');
+            sectionAllOrdersLocations.classList.remove('inactive');       
+          
+        }        
+        break;
+
+    case 'ended-orders':
+        sectionAwait.classList.remove('inactive')
+        await loadEndedOrders(endedOrders_itemsContainer,'Ordenes finalizdas:', 'entregado', 'cancelado')
+        if(sectionEndedOrders.classList.contains('inactive')){
+            inicio_BtnContainer.classList.add('inactive');
+            cartCard.classList.add('inactive');
+            sectionOptions.classList.add('inactive');
+            deliveryCard.classList.add('inactive');
+            sectionPendingOrders.classList.add('inactive');
+            sectionAllOrdersLocations.classList.add('inactive');       
+            sectionEndedOrders.classList.remove('inactive');
+          
+        }        
+        break;  
+  }
+   
+   
     toggleVisibility(userMenu);      
 }
 

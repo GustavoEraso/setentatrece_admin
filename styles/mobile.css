@@ -614,7 +614,7 @@ header img {
 .section-delivery{
     background: var(--white);
     display: grid;
-    grid-template-rows: auto 6fr 90px;
+    grid-template-rows: 60px auto 6fr 30px;
     grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
     height: 100%;
@@ -624,23 +624,22 @@ header img {
 }
 
 
+
+
 .section-delivery__info-container{
-    grid-area: 1 / 1 / 2 / 4;
+    grid-area: 2 / 1 / 3 / 4;
     box-shadow: 0 0 0 1px var(--white);
     width: 100vw;       
     display: flex;
     flex-direction: column;
-
-  
-
 }
 
 .section-delivery__delivery-info{
-    grid-area: 2 / 1 / 3 / 4;
+    grid-area: 3 / 1 / 4 / 4;
     
 }
 .section-delivery__all-orders-map{
-    grid-area: 2 / 1 / 4 / 4;
+    grid-area: 3 / 1 / 4 / 4;
     
 }
 
@@ -651,8 +650,7 @@ header img {
     flex-direction: column;
     gap: 5px;
     align-items: center;
-    padding: 5px;
-    
+    padding: 5px;    
 
 
 }
@@ -670,7 +668,7 @@ header img {
 }
 
 
-.delivery-price-container{
+.delivery-price-container{   
     display: grid;
     place-items: center;
 }

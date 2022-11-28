@@ -38,8 +38,8 @@
             <section class="aside-user-menu__buttons-container inactive" id="userMenu_BtnContainer">
                 <button class="navigator-button navigator-button--small navigator-button--red"id="userMenu_btn_pendingOrders">ORDENES INGRESADAS</button>
                 <button class="navigator-button navigator-button--small navigator-button--yellow" id="userMenu_btn_deliveryOrders" >ORDENES PARA REPARTO</button>
-                <button class="navigator-button navigator-button--small navigator-button--blue" >VER MAPA </button>
-                <button class="navigator-button navigator-button--small navigator-button--green">ORDENES FINALIZADAS</button>
+                <button class="navigator-button navigator-button--small navigator-button--blue" id="userMenu_btn_allOrdersLocations">VER MAPA </button>
+                <button class="navigator-button navigator-button--small navigator-button--green" id="userMenu_btn_endedOrders">ORDENES FINALIZADAS</button>
             </section>   
             <button class="WhatsApp-button" id="userMenu_btnWhatsApp" >Contactar por WhatsApp</button>
         </aside>
@@ -134,6 +134,7 @@
        
 
         <section class="section-delivery inactive " id="deliveryCard">
+            <button class="primary-button" id="deliveryCard_btn_return">volver</button> 
             <section class=" section-delivery__info-container">
                 <article class="info-card" id="deliveryCard_clientData">
                     <div class="info-card__data-container">
@@ -164,9 +165,8 @@
 
                         </section>                                 
                     </div>                
-                </div>   
-                                  
-            <button class="primary-button" id="deliveryCard_btn_return">volver</button> 
+                </div>                                    
+            
             <div class="delivery-price-container">
                 <span class="delivery-price" id="deliveryCard_amount">$</span>
             </div>

@@ -220,9 +220,6 @@ export function renderEndedOrders(section, array, title){
         const amount = document.createElement('span');
         amount.classList.add('info-card__amount');
         amount.innerText = `$ ${order.amount}`;
-
-
-
                     
         
         const timeContainer = document.createElement('div');
@@ -255,7 +252,7 @@ export function renderEndedOrders(section, array, title){
     }
 
     endedOrders_ordersDelivered.innerText = amountList.length;
-    endedOrders_amount.innerText = amountList.reduce((a, b) => a + b, 0);
+    endedOrders_amount.innerText = `$ ${amountList.reduce((a, b) => a + b, 0)}`;
     endedOrders_averageDelay.innerText = parseInt((delayList.reduce((a, b) => a + b, 0) / delayList.length)/ 60000) // canceled orders included.
     endedOrders_minDelay.innerText = parseInt(Math.min(...delayList)/ 60000);
     endedOrders_maxDelay.innerText = parseInt(Math.max(...delayList)/ 60000);
@@ -305,6 +302,11 @@ export function loadChart(order){
     currentOrder= {};
     currentOrder = order;    
     setMap(order);
+    
+        cartCard_btn_ready.classList.remove('inactive');
+        cartCard_btn_cancel.classList.remove('inactive');        
+        deliveryCard_btn_ready.classList.remove('inactive');
+        sectionOptions_btn_ready.classList.remove('inactive');
 
 switch (order.status){
     case 'ingresado':
@@ -319,6 +321,20 @@ switch (order.status){
         cartCard_btn_ready.innerText = 'Entregado';
         deliveryCard_btn_ready.innerText = 'Entregado';
         sectionOptions_btn_ready.innerText='Entregado';
+        break
+
+    case 'entregado' :
+        cartCard_btn_ready.classList.add('inactive');
+        cartCard_btn_cancel.classList.add('inactive');        
+        deliveryCard_btn_ready.classList.add('inactive');
+        sectionOptions_btn_ready.classList.add('inactive');
+        break
+
+    case 'cancelado' :
+        cartCard_btn_ready.classList.add('inactive');
+        cartCard_btn_cancel.classList.add('inactive');        
+        deliveryCard_btn_ready.classList.add('inactive');
+        sectionOptions_btn_ready.classList.add('inactive');
         break
     }
 
