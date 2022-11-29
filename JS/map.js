@@ -37,6 +37,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(deliveryCard_map);
    
+
 let marker = L.marker([-34.9087642861, -54.9581809946],{icon: greenIcon}).addTo(deliveryCard_map);
 
 export function setMap(order){
@@ -44,21 +45,27 @@ export function setMap(order){
     let sistemLocation = locations.sistemLocation;
     let manualLocation = locations.manualLocation;
     const deliveryCard_addresDescription = document.querySelector('#deliveryCard_addresDescription')
-    deliveryCard_addresDescription.innerText = locations.locationObs || 'El cliente no escribio una descripcion';
-    
+    deliveryCard_addresDescription.innerText = locations.locationObs || 'El cliente no escribio una descripcion';    
 
-    deliveryCard_map.setView([manualLocation.lat || sistemLocation.lat , manualLocation.lng || sistemLocation.lng], 16);
     marker.setLatLng([manualLocation.lat || sistemLocation.lat , manualLocation.lng || sistemLocation.lng]); 
+    deliveryCard_map.setView([manualLocation.lat || sistemLocation.lat , manualLocation.lng || sistemLocation.lng], 16);
+
+    deliveryCard_map.fitBounds([
+        [-34.9087642861, -54.9581809946],
+        [manualLocation.lat || sistemLocation.lat , manualLocation.lng || sistemLocation.lng]
+    ]);
+
 }
 
 
-let allOrdersMap = L.map('allOrdersMap').setView([-34.9087642861, -54.9581809946], 16);
+let allOrdersMap = L.map('allOrdersMap',{ zoomSnap: 0.8}).setView([-34.9087642861, -54.9581809946], 16);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(allOrdersMap);
 
-let centralMarker = L.marker([-34.9087642861, -54.9581809946],{icon: centralIcon}).addTo(allOrdersMap);
+// let centralMarker = L.marker([-34.9087642861, -54.9581809946],{icon: centralIcon}).addTo(allOrdersMap);
+let centralMarker = L.marker([-34.9087642861, -54.9581809946],{icon: centralIcon}).addTo(allOrdersMap,deliveryCard_map);
 
 
 
@@ -94,9 +101,7 @@ let centralMarker = L.marker([-34.9087642861, -54.9581809946],{icon: centralIcon
         delayedIcon = yellowIcon
     } else {
         delayedIcon = redIcon
-    };
-
-    
+    };    
 
 
     L.marker([

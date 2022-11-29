@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control"  content="no-cache" />
-    <link rel="stylesheet" href="./styles/mobile.css?v=0.0.1">
+    <link rel="stylesheet" href="./styles/mobile.css">
+    <link rel="stylesheet" href="./styles/tablet.css" media="(min-width:768px)">
+    <link rel="stylesheet" href="./styles/portatil.css" media="(min-width:1024px)">
     <title>Setenta Trece gestion</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
@@ -35,12 +37,12 @@
                 <button class="primary-button " id="btnLogIn">Iniciar Sesión</button> 
                 <button class="secondary-button secondary-button--center inactive" id="btnLogOut">Cerrar Sesión</button>             
             </section>
-            <section class="aside-user-menu__buttons-container inactive" id="userMenu_BtnContainer">
+            <nav class="aside-user-menu__buttons-container inactive portatil-inactive" id="userMenu_BtnContainer">
                 <button class="navigator-button navigator-button--small navigator-button--red"id="userMenu_btn_pendingOrders">ORDENES INGRESADAS</button>
                 <button class="navigator-button navigator-button--small navigator-button--yellow" id="userMenu_btn_deliveryOrders" >ORDENES PARA REPARTO</button>
                 <button class="navigator-button navigator-button--small navigator-button--blue" id="userMenu_btn_allOrdersLocations">VER MAPA </button>
                 <button class="navigator-button navigator-button--small navigator-button--green" id="userMenu_btn_endedOrders">ORDENES FINALIZADAS</button>
-            </section>   
+            </nav>   
             <button class="WhatsApp-button" id="userMenu_btnWhatsApp" >Contactar por WhatsApp</button>
         </aside>
 
@@ -49,15 +51,15 @@
     </header>
     <main class="main-inicio">
 
-        <section class="inicio-button-container inactive" id="inicio_BtnContainer">
+        <nav class="inicio-button-container inactive " id="inicio_BtnContainer">
             <button class="navigator-button navigator-button--red" id="inicio_btn_pendingOrders" >ORDENES INGRESADAS</button>
             <button class="navigator-button navigator-button--yellow" id="inicio_btn_deliveryOrders">ORDENES PARA REPARTO</button>
             <button class="navigator-button navigator-button--blue" id="inicio_btn_allOrdersLocations">VER MAPA </button>
             <button class="navigator-button navigator-button--green" id="inicio_btn_endedOrders">ORDENES FINALIZADAS</button>
-        </section>
+        </nav>
 
         <section class="section-pending-orders inactive" id="sectionPendingOrders">
-            <button class="primary-button "  id="sectionPendingOrders_btn_return">volver</button> 
+            <button class="primary-button portatil-inactive"  id="sectionPendingOrders_btn_return">volver</button> 
             <div class="section-pending-orders__orders-container" id="sectionPendingOrders_ordersContainer">
                             <!-- ACASE INSERTAN DE MANERA DINAMICA LAS CARDS -->
             </div>                                        
@@ -187,7 +189,7 @@
                     </div>                
             </div>   
                                   
-            <button class="primary-button" id="sectionAllOrdersLocations_btn_return">volver</button> 
+            <button class="primary-button portatil-inactive" id="sectionAllOrdersLocations_btn_return">volver</button> 
              
 
         </section>
@@ -195,8 +197,8 @@
         <section class="section-ended-orders inactive" id="sectionEndedOrders">
 
             <div class="section-ended-orders__buttons-container" id="popUpBtnContainer">
-                <button class="primary-button " id="endedOrders_btn_return">Volver</button>      
-                <button class="primary-button " id="endedOrders_btn_process">Procesar Ordenes</button>
+                <button class="primary-button portatil-inactive " id="endedOrders_btn_return">Volver</button>      
+                <button class="primary-button primary-button--green-gradient " id="endedOrders_btn_process">Procesar Ordenes</button>
             </div>
 
             <section class="resume-card">

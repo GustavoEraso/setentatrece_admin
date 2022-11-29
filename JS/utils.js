@@ -64,6 +64,9 @@ export function doLogout(){
     userMenu_name.innerText = 'Debe iniciar sesion';
     toggleVisibility(userMenu_BtnContainer);
     inicio_BtnContainer.classList.add('inactive');
+
+    inicio_BtnContainer.classList.remove('portatil-active')
+  
 }
 
 export async function init() {
@@ -74,26 +77,30 @@ export async function init() {
     userMenu_name.innerText = currentUser.displayName;
     toggleVisibility(userMenu_BtnContainer);
     toggleVisibility(inicio_BtnContainer);
-    toggleVisibility(userMenu);
+    toggleVisibility(userMenu);    
+    inicio_BtnContainer.classList.add('portatil-active')
   
   }
 
   let ordersList = [];
 
   export async function loadOrders(status,section,title) {
-    sectionAwait.classList.remove('inactive')
-    let orders = [];    
-  
+   
+    let orders = [];      
     try {
       const response = await getItems("ventas", status);
       orders = [...response];
 
       orders.sort((a,b)=> a.date - b.date); 
+
+      if(isDisfferent(orders,ordersList)){        
+        ordersList = orders;    
+         renderOrders(section, orders, title);
+         startUpdateTimePendingOrders(status,section,title);
+      }else{
+        refreshPendingOrders()
+      }
   
-      ordersList = orders;
-  
-       renderOrders(section, orders, title);
-       startUpdateTimePendingOrders();
        sectionAwait.classList.add('inactive')
     } catch (error) {
       console.error(error);
@@ -135,15 +142,9 @@ export async function init() {
         result = true
       }       
     })
-    result 
-    ?console.log('son distintos')
-    :console.log('son iguales')
-
+   
     return result;
   }
-
-
-
 
 
 
@@ -163,7 +164,6 @@ export async function init() {
       if(isDisfferent(ordersOnMap,orders)){
         ordersOnMap = orders;
         addAllOrdersToMap(orders);
-        startUpdateAllOrdersMap(status) 
       }
 
       sectionAwait.classList.add('inactive')
@@ -178,7 +178,8 @@ export async function init() {
 
 
 
-  async function getItems(colection,...statusList) {
+  async function getItems(colection,...statusList) { 
+  
    
 
     let items = [];
@@ -268,9 +269,7 @@ export async function processOrders(){
     await insert('ordenes_procesadas', order);
   })
 
-  console.log(orders)
-
-  // ELIMINO LAS ORDENES DE COLECCION ventas
+   // ELIMINO LAS ORDENES DE COLECCION ventas
 
   await deleteOrders('ventas',...orders);  
 
@@ -310,7 +309,6 @@ async function deleteOrders(collection,...orders){
 
 async function insert(collection,  item) {
   try {
-    console.log('insert')
     const response = await db.collection(collection).add(item);
     return response;
   } catch (error) {
@@ -328,7 +326,6 @@ async function insert(collection,  item) {
       switch (statusSection) {
           case "pending-orders" :
               await loadOrders('ingresado',sectionPendingOrders_ordersContainer,'Ordenes Pendientes:')
-              startUpdateTimePendingOrders();
               toggleVisibility(sectionPendingOrders);
               
               break;
@@ -354,22 +351,21 @@ async function insert(collection,  item) {
 
   let intervalId;
 
-  export function startUpdateTimePendingOrders(){  
-    stopTimeControl();
-      intervalId = setInterval(updateTimePendingOrders, 60000);    
+  export function startUpdateTimePendingOrders(status,section,title){  
+      stopTimeControl();
+      intervalId = setInterval(loadOrders, 10000,status,section,title);    
   }
 
-  export function startUpdateTimeChart(pedido){
+
+  export function startUpdateTimeChart(order){
     stopTimeControl();     
-      intervalId = setInterval(updateTimeChart, 60000, pedido);
+      intervalId = setInterval(updateTimeChart, 10000, order);
     
   }
 
-  export function startUpdateAllOrdersMap(...status){   
-    
+  export function startUpdateAllOrdersMap(...status){       
     stopTimeControl();     
-      intervalId = setInterval(updateAllOrdersMap, 10000, ...status);
-    
+      intervalId = setInterval(updateAllOrdersMap, 10000, ...status);    
   }
 
   export function stopTimeControl(){
@@ -377,8 +373,8 @@ async function insert(collection,  item) {
     intervalId= null;
   }
   
-  function updateTimePendingOrders(){
-   
+  function refreshPendingOrders(){
+      
     for (const pedido of ordersList) {
       const posicion = ordersList.indexOf(pedido);
       const backgroundCard = document.querySelector('#cardOrderSmall' + posicion);
@@ -454,8 +450,8 @@ async function insert(collection,  item) {
   }
 
   
-  function updateAllOrdersMap(status){   
-    loadLocations(status)
+  function updateAllOrdersMap(...status){ 
+     loadLocations(status)
   }
   
   export function sendWhatsApp(numero){

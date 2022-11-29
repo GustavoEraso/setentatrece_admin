@@ -19,99 +19,111 @@ export function renderOrders(section, array, title){
     upperTitle.classList.add('upper-title-cards-cardXs')
     upperTitle.innerText = title.toUpperCase();
     section.appendChild(upperTitle);
-    
-    for(let order of array){        
 
-        const cardXs = document.createElement('article');
-        cardXs.classList.add('info-card');
-        if((Date.now() - order.date) < 1200000 ){
-            cardXs.classList.add('background-white')
-        }else if((Date.now() - order.date) < 2400000 ){
-            cardXs.classList.add('background-orange')
-        }else{
-            cardXs.classList.add('background-red')            
-        };
-        cardXs.setAttribute('id',`cardOrderSmall${array.indexOf(order)}`);
+    if(!array.length){
+        const noDataCard = document.createElement('div')
+        noDataCard.classList.add('no-data-card')
 
-        cardXs.addEventListener('click',function(){
-            loadChart(order);
-            toggleVisibility(sectionPendingOrders);
-            switch (statusSection) {
-                case 'pending-orders':
-                    toggleVisibility(cartCard);
-                    break;
-                case 'delivery-orders':
-                    toggleVisibility(deliveryCard);
-                    break;
-            
-            }
-            
-        });
+        const noDataCard_text = document.createElement('span');
+        noDataCard_text.innerText = 'NO HAY ORDENES'
 
-        const orderSmallData = document.createElement('div');
-        orderSmallData.classList.add('info-card__data-container');
+        noDataCard.appendChild(noDataCard_text)
+        section.appendChild(noDataCard)
 
-        const textCliente = document.createElement('div');
-        textCliente.classList.add('info-card__client-name');
-        textCliente.innerText = order.name;
+    }else{    
+        for(let order of array){        
 
-        const idClient = document.createElement('span');
-        idClient.classList.add('info-card__client-cel');
-        idClient.innerText = order.cel;
+            const cardXs = document.createElement('article');
+            cardXs.classList.add('info-card');
+            if((Date.now() - order.date) < 1200000 ){
+                cardXs.classList.add('background-white')
+            }else if((Date.now() - order.date) < 2400000 ){
+                cardXs.classList.add('background-orange')
+            }else{
+                cardXs.classList.add('background-red')            
+            };
+            cardXs.setAttribute('id',`cardOrderSmall${array.indexOf(order)}`);
+
+            cardXs.addEventListener('click',function(){
+                loadChart(order);
+                toggleVisibility(sectionPendingOrders);
+                switch (statusSection) {
+                    case 'pending-orders':
+                        toggleVisibility(cartCard);
+                        break;
+                    case 'delivery-orders':
+                        toggleVisibility(deliveryCard);
+                        break;
+                
+                }
+                
+            });
+
+            const orderSmallData = document.createElement('div');
+            orderSmallData.classList.add('info-card__data-container');
+
+            const textCliente = document.createElement('div');
+            textCliente.classList.add('info-card__client-name');
+            textCliente.innerText = order.name;
+
+            const idClient = document.createElement('span');
+            idClient.classList.add('info-card__client-cel');
+            idClient.innerText = order.cel;
 
 
-        const listContainer = document.createElement('div');
-        listContainer.classList.add('info-card__list-container');
+            const listContainer = document.createElement('div');
+            listContainer.classList.add('info-card__list-container');
 
-        const cartCard_amount = document.querySelector('#cartCard_amount')
-        cartCard_amount.innerText =`Monto total: $${order.amount}`;
+            const cartCard_amount = document.querySelector('#cartCard_amount')
+            cartCard_amount.innerText =`Monto total: $${order.amount}`;
 
-        const deliveryCard_amount = document.querySelector('#deliveryCard_amount');
-        deliveryCard_amount.innerText =`$${order.amount}`;
+            const deliveryCard_amount = document.querySelector('#deliveryCard_amount');
+            deliveryCard_amount.innerText =`$${order.amount}`;
 
-        const ul = document.createElement('ul');
-                            let tortu = 0;
-                            let burger = 0;
-                        for (const item of order.items) {
-                            if(item.familia =='Hamburguesas'){
-                                burger++;
-                            }else if(item.familia =='Tortugones'){
-                                tortu++;
+            const ul = document.createElement('ul');
+                                let tortu = 0;
+                                let burger = 0;
+                            for (const item of order.items) {
+                                if(item.familia =='Hamburguesas'){
+                                    burger++;
+                                }else if(item.familia =='Tortugones'){
+                                    tortu++;
+                                }
                             }
-                        }
-                        if(tortu){
-                            const liTortu = document.createElement('li');
-                            liTortu.innerText = `Tortugones: ${tortu}`
-                            ul.appendChild(liTortu);
-                        }
-                        if(burger){
-                            const liBurger = document.createElement('li');
-                            liBurger.innerText = `Hamburguesas: ${burger}`
-                            ul.appendChild(liBurger);
-                        }
-        
-        const timeContainer = document.createElement('div');
-        timeContainer.classList.add('info-card__time-container');
+                            if(tortu){
+                                const liTortu = document.createElement('li');
+                                liTortu.innerText = `Tortugones: ${tortu}`
+                                ul.appendChild(liTortu);
+                            }
+                            if(burger){
+                                const liBurger = document.createElement('li');
+                                liBurger.innerText = `Hamburguesas: ${burger}`
+                                ul.appendChild(liBurger);
+                            }
+            
+            const timeContainer = document.createElement('div');
+            timeContainer.classList.add('info-card__time-container');
 
-        const delayedTime = document.createElement('span');
-        delayedTime.classList.add('info-card__delayed-time');
-        delayedTime.setAttribute('id',`delayedTime${array.indexOf(order)}`)
-        delayedTime.innerText = parseInt((Date.now() - order.date) / 60000);
+            const delayedTime = document.createElement('span');
+            delayedTime.classList.add('info-card__delayed-time');
+            delayedTime.setAttribute('id',`delayedTime${array.indexOf(order)}`)
+            delayedTime.innerText = parseInt((Date.now() - order.date) / 60000);
 
-        const spanMin = document.createElement('span');
-        spanMin.innerText = 'min'
+            const spanMin = document.createElement('span');
+            spanMin.innerText = 'min'
 
-        listContainer.appendChild(ul);
-        timeContainer.appendChild(delayedTime);
-        timeContainer.appendChild(spanMin);
+            listContainer.appendChild(ul);
+            timeContainer.appendChild(delayedTime);
+            timeContainer.appendChild(spanMin);
 
-        orderSmallData.appendChild(textCliente);
-        orderSmallData.appendChild(idClient);
-        orderSmallData.appendChild(listContainer);
+            orderSmallData.appendChild(textCliente);
+            orderSmallData.appendChild(idClient);
+            orderSmallData.appendChild(listContainer);
 
-        cardXs.append(orderSmallData,timeContainer);
+            cardXs.append(orderSmallData,timeContainer);
 
-        section.appendChild(cardXs);
+            section.appendChild(cardXs);
+        }
     }
 }
 

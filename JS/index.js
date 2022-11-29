@@ -1,5 +1,5 @@
 import { currentOrder } from "./cards.js";
-import { toggleVisibility , doLogIn, doLogout, loadOrders , loadEndedOrders , stopTimeControl, startUpdateTimePendingOrders, popUp, sendWhatsApp, update, loadLocations, orderChangeStatus , processOrders } from "./utils.js";
+import { toggleVisibility , doLogIn, doLogout, loadOrders , loadEndedOrders , stopTimeControl, startUpdateTimePendingOrders, popUp, sendWhatsApp, update, loadLocations, orderChangeStatus , processOrders, startUpdateAllOrdersMap } from "./utils.js";
 
 
 export let statusSection;
@@ -18,14 +18,14 @@ const userMenu_btn_pendingOrders= document.querySelector('#userMenu_btn_pendingO
 userMenu_btn_pendingOrders.addEventListener('click', function(){    
     
     statusSection = 'pending-orders'
-    btnUserMenuFunction('pending-orders')
+    btnMenuFunction('pending-orders')
   
 })
 const userMenu_btn_deliveryOrders= document.querySelector('#userMenu_btn_deliveryOrders');
 userMenu_btn_deliveryOrders.addEventListener('click', async function(){  
 
     statusSection = 'delivery-orders';
-    btnUserMenuFunction('delivery-orders');
+    btnMenuFunction('delivery-orders');
     
 })
 
@@ -33,7 +33,7 @@ const userMenu_btn_allOrdersLocations= document.querySelector('#userMenu_btn_all
 userMenu_btn_allOrdersLocations.addEventListener('click', async function(){  
 
     statusSection = 'all-orders-locations';
-    btnUserMenuFunction('all-orders-locations');
+    btnMenuFunction('all-orders-locations');
     
 })
 
@@ -41,11 +41,11 @@ const userMenu_btn_endedOrders= document.querySelector('#userMenu_btn_endedOrder
 userMenu_btn_endedOrders.addEventListener('click', async function(){  
 
     statusSection = 'ended-orders';
-    btnUserMenuFunction('ended-orders');
+    btnMenuFunction('ended-orders');
     
 })
 
-async function btnUserMenuFunction(section){   
+async function btnMenuFunction(section){   
    
   switch (section) {
     case 'pending-orders':
@@ -77,6 +77,7 @@ async function btnUserMenuFunction(section){
     case 'all-orders-locations':
         sectionAwait.classList.remove('inactive')
         await loadLocations("ingresado","pronto_para_reparto");       
+        startUpdateAllOrdersMap("ingresado","pronto_para_reparto")
         if(sectionAllOrdersLocations.classList.contains('inactive')){
             inicio_BtnContainer.classList.add('inactive');
             sectionEndedOrders.classList.add('inactive');
@@ -106,7 +107,7 @@ async function btnUserMenuFunction(section){
   }
    
    
-    toggleVisibility(userMenu);      
+    userMenu.classList.add('inactive');      
 }
 
 
@@ -121,35 +122,26 @@ userMenu_btnWhatsApp.addEventListener('click', function(){
 const inicio_btn_pendingOrders= document.querySelector('#inicio_btn_pendingOrders');
 inicio_btn_pendingOrders.addEventListener('click',async function(){
     statusSection = 'pending-orders';
-    await loadOrders('ingresado',sectionPendingOrders_ordersContainer,'Ordenes Pendientes:');
-    toggleVisibility(inicio_BtnContainer);
-    toggleVisibility(sectionPendingOrders);    
+    btnMenuFunction('pending-orders')   
 })
 
 const inicio_btn_deliveryOrders= document.querySelector('#inicio_btn_deliveryOrders');
 inicio_btn_deliveryOrders.addEventListener('click', async function(){
     statusSection = 'delivery-orders';
-    await loadOrders('pronto_para_reparto',sectionPendingOrders_ordersContainer,'Ordenes prontas para reparto:')
-    toggleVisibility(inicio_BtnContainer);
-    toggleVisibility(sectionPendingOrders);
+    btnMenuFunction('delivery-orders')
 });
 
 
 const inicio_btn_allOrdersLocations = document.querySelector('#inicio_btn_allOrdersLocations');
 inicio_btn_allOrdersLocations.addEventListener('click', async function(){
     statusSection = 'all-orders-locations';
-    sectionAwait.classList.remove('inactive')
-    await loadLocations("ingresado","pronto_para_reparto");
-    toggleVisibility(inicio_BtnContainer);
-    toggleVisibility(sectionAllOrdersLocations);
+    btnMenuFunction('all-orders-locations')
 })
 
 const inicio_btn_endedOrders = document.querySelector('#inicio_btn_endedOrders');
 inicio_btn_endedOrders.addEventListener('click', async function(){
     statusSection = 'ended-orders';
-    await loadEndedOrders(endedOrders_itemsContainer,'Ordenes finalizdas:', 'entregado', 'cancelado')
-    toggleVisibility(inicio_BtnContainer);
-    toggleVisibility(sectionEndedOrders);
+    btnMenuFunction('ended-orders')
 })
 
 
@@ -161,7 +153,6 @@ sectionAllOrdersLocations_btn_return.addEventListener('click', function(){
     toggleVisibility(inicio_BtnContainer);
 
 })
-
 
 
 
