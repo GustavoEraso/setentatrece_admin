@@ -221,7 +221,8 @@ export async function init() {
         docId = i.id;
         docHistory = order.history ||[];
       });
-            
+
+                
       docHistory.push({
         status: newStatus,
         date: Number(Date.now()),
@@ -230,6 +231,8 @@ export async function init() {
           id: currentUser.uid
         }
       })
+
+
       
       await db.collection(collection).doc(docId).update({
         status: newStatus, 

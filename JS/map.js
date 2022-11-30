@@ -31,7 +31,7 @@ let yellowIcon = new icon({iconUrl: "../assets/leaflet/yellow-icon.png" });
 let redIcon = new icon({iconUrl: "../assets/leaflet/red-icon.png"});
 
 
-let deliveryCard_map = L.map('deliveryCard_map').setView([-34.9087642861, -54.9581809946], 16);
+let deliveryCard_map = L.map('deliveryCard_map',{ zoomSnap: 2}).setView([-34.9087642861, -54.9581809946], 16);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -58,14 +58,14 @@ export function setMap(order){
 }
 
 
-let allOrdersMap = L.map('allOrdersMap',{ zoomSnap: 0.8}).setView([-34.9087642861, -54.9581809946], 16);
+let allOrdersMap = L.map('allOrdersMap',{ zoomSnap: 2}).setView([-34.9087642861, -54.9581809946], 16);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(allOrdersMap);
 
-// let centralMarker = L.marker([-34.9087642861, -54.9581809946],{icon: centralIcon}).addTo(allOrdersMap);
-let centralMarker = L.marker([-34.9087642861, -54.9581809946],{icon: centralIcon}).addTo(allOrdersMap,deliveryCard_map);
+let centralMarker = L.marker([-34.9087642861, -54.9581809946],{icon: centralIcon}).addTo(allOrdersMap);
+let centralMarker2 = L.marker([-34.9087642861, -54.9581809946],{icon: centralIcon}).addTo(deliveryCard_map);
 
 
 
